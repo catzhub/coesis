@@ -1,0 +1,32 @@
+Branding
+
+App domain
+https://impc.sksu-orms.net
+
+Authorized domains
+sksu-orms.net
+
+Audience
+
+Publishing status
+In production
+
+User type
+External
+
+Clients
+
+Client ID
+807074098909-sc38on4sjquq5nj95ofpfhf3e03r19jk.apps.googleusercontent.com
+
+Authorized JavaScript origins
+URIs 1 
+https://www.impc.sksu-orms.net
+URIs 2 
+http://localhost
+
+Authorized redirect URIs
+URIs 1 
+https://www.impc.sksu-orms.net/google-login.php
+
+

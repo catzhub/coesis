@@ -1,0 +1,15 @@
+{
+  "name": "jupiter/webtemplate",
+  "authors": [
+    {
+      "name": "catzhub",
+      "email": "lenmarcatajay@gmail.com"
+    }
+  ],
+  "require": {
+    "google/apiclient": "2.13.0"
+  },
+  "config": {
+    "platform-check": false
+  }
+}
