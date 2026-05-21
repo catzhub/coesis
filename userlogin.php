@@ -95,14 +95,29 @@ class="col-lg-8 col-md-8 d-flex flex-column align-items-center justify-content-c
 
                 type: "POST",
 
+                dataType: "json",
+
                 data: {
                   credential: response.credential
                 },
+
                 success: function(res) {
+
                   console.log(res);
+
                   if (res.status == "success") {
-                    window.location = res.redirect;
+
+                    window.location =
+                    res.redirect;
+
                   }
+
+                },
+
+                error: function(xhr) {
+
+                  console.log(xhr.responseText);
+
                 }
 
               });
