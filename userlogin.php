@@ -87,47 +87,34 @@ class="col-lg-8 col-md-8 d-flex flex-column align-items-center justify-content-c
           <div class="g_id_signin"></div>
 
           <script>
-            function handleCredentialResponse(response) {
+function handleCredentialResponse(response) {
 
-              fetch("verify.php", {
+  $.ajax({
 
-                method: "POST",
+    url: "verify.php",
 
-                headers: {
-                  "Content-Type": "application/json"
-                },
+    type: "POST",
 
-                body: JSON.stringify({
-                  credential: response.credential
-                })
+    data: {
+      credential: response.credential
+    },
 
-              })
+    success: function(res) {
 
-              .then(res => res.json())
+      console.log(res);
 
-              .then(data => {
+      if (res.status == "success") {
 
-                console.log("Server response:", data);
+        window.location =
+        res.redirect;
 
-                if (data.status === "success") {
+      }
 
-                  window.location = data.redirect;
+    }
 
-                } else {
+  });
 
-                  alert(data.message);
-
-                }
-
-              })
-
-              .catch(error => {
-
-                console.error("Fetch error:", error);
-
-              });
-
-            }
+}
           </script>
 
 
