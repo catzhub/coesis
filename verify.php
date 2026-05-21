@@ -14,12 +14,24 @@ session_start();
    READ INPUT
 ============================ */
 
-$data = json_decode(
-  file_get_contents("php://input"),
-  true
-);
+// $data = json_decode(file_get_contents("php://input"), true);
 
-if (!isset($data['credential'])) {
+// if (!isset($data['credential'])) {
+//   echo json_encode([
+//     "status"=>"error",
+//     "message"=>"Missing credential"
+//   ]);
+//   exit;
+// }
+
+
+
+$credential =
+isset($_POST['credential'])
+? $_POST['credential']
+: '';
+
+if ($credential == '') {
 
   echo json_encode([
     "status"=>"error",
@@ -34,15 +46,12 @@ if (!isset($data['credential'])) {
    VERIFY GOOGLE TOKEN
 ============================ */
 
-$credential = $data['credential'];
-
 $verify_url = "https://oauth2.googleapis.com/tokeninfo?id_token=".$credential;
 
 $ch = curl_init();
 
 curl_setopt($ch, CURLOPT_URL, $verify_url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 
@@ -230,6 +239,9 @@ $_SESSION['picture'] = $picture;
 ============================ */
 
 ob_clean();
+
+echo json_encode($_POST);
+exit;
 
 echo json_encode([
 
