@@ -93,31 +93,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $lastname = $_POST['lastname'];
     $firstname = $_POST['firstname'];
     $middlename = $_POST['middlename'];
-
     $municipality = $_POST['municipality'];
     $province = $_POST['province'];
-
     $dob = $_POST['dob'];
     $birthplace = $_POST['birthplace'];
-
     $height = $_POST['height'];
     $weight = $_POST['weight'];
-
     $religion = $_POST['religion'];
-
     $marital_status = $_POST['marital_status'];
     $gender = $_POST['gender'];
-
     $citizenship = $_POST['citizenship'];
-
     $contactno = $_POST['contactno'];
-
     $dialect = $_POST['dialect'];
-
     $course = $_POST['course'];
     $major = $_POST['major'];
-
-    $datestart = $_POST['datestart'];
+    $datestart = !empty($_POST['datestart'])? $_POST['datestart']: null;
     $ojthours = $_POST['ojthours'];
 
     $stmt = $conn->prepare("
@@ -129,30 +119,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       lastname=?,
       firstname=?,
       middlename=?,
-
       municipality=?,
       province=?,
-
       dob=?,
       birthplace=?,
-
       height=?,
       weight=?,
-
       religion=?,
-
       marital_status=?,
       gender=?,
-
       citizenship=?,
-
       contactno=?,
-
       dialect=?,
-
       course=?,
       major=?,
-
       datestart=?,
       ojthours=?
 
@@ -160,47 +140,39 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     ");
 
-    $stmt->bind_param(
+$stmt->bind_param(
 
-    "sssssssddsssssssisss",
+"sssssssddsssssssssis",
 
-    $lastname,
-    $firstname,
-    $middlename,
+$lastname,
+$firstname,
+$middlename,
+$municipality,
+$province,
+$dob,
+$birthplace,
+$height,
+$weight,
+$religion,
+$marital_status,
+$gender,
+$citizenship,
+$contactno,
+$dialect,
+$course,
+$major,
+$datestart,
+$ojthours,
+$email
 
-    $municipality,
-    $province,
+);
 
-    $dob,
-    $birthplace,
-
-    $height,
-    $weight,
-
-    $religion,
-
-    $marital_status,
-    $gender,
-
-    $citizenship,
-
-    $contactno,
-
-    $dialect,
-
-    $course,
-    $major,
-
-    $datestart,
-    $ojthours,
-
-    $email
-
-    );
-
-    $stmt->execute();
+    // if ($stmt->execute()) {
+      # code...
+$stmt->execute();
     header('location: forms-elements.php');
     exit();
+    
 
   }
 
@@ -276,6 +248,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $agency = $_POST['agency'];
     $representative = $_POST['representative'];
     $position = $_POST['position'];
+    $agencycontact = isset($_POST['agencycontact']) ? $_POST['agencycontact'] : '';
 
     $agencyaddress1 = $_POST['agencyaddress1'];
     $agencyaddress2 = $_POST['agencyaddress2'];
@@ -292,6 +265,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       agency=?,
       representative=?,
       rep_position=?,
+      agencycontact=?,
 
       agencyaddress1=?,
       agencyaddress2=?,
@@ -305,12 +279,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $stmt->bind_param(
 
-    "sssssssss",
+    "ssssssssss",
 
     $agency,
     $representative,
     $position,
-
+    $agencycontact,
+    
     $agencyaddress1,
     $agencyaddress2,
     $agencyaddress3,
@@ -1078,8 +1053,25 @@ $form = array();
 
                   <div class="col-sm-6">
                     <label for="middlename" class="form-label">Position</label>
-                    <input type="text" class="form-control" name="position" placeholder="" value="<?php echo isset($form['position']) ? $form['position'] : ''; ?>">
+                    <input type="text" class="form-control" name="position" placeholder="" value="<?php echo isset($form['rep_position']) ? $form['rep_position'] : ''; ?>">
                   </div>
+                </div>
+                <div class="row mb-3">
+
+                  <div class="col-sm-6">
+
+                    <label class="form-label">
+                      Contact Number
+                    </label>
+
+                    <input
+                    type="text"
+                    class="form-control"
+                    name="agencycontact"
+                    value="<?php echo isset($form['agencycontact']) ? $form['agencycontact'] : ''; ?>">
+
+                  </div>
+
                 </div>
 
                 <div class="row mb-3">

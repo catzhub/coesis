@@ -389,8 +389,58 @@
             </a>
           </li>
           <li>
-            <a href="ojt-form1.php">
+            <a href="ojt-form-1.php" target="_blank">
               <i class="bi bi-circle"></i><span>Form 1</span>
+            </a>
+          </li>
+          <li>
+            <a href="ojt-form-2.php" target="_blank">
+              <i class="bi bi-circle"></i><span>Form 2</span>
+            </a>
+          </li>
+          <li>
+            <a href="ojt-form-3.php" target="_blank">
+              <i class="bi bi-circle"></i><span>Form 3</span>
+            </a>
+          </li>
+          <li>
+            <a href="ojt-form-4.php" target="_blank">
+              <i class="bi bi-circle"></i><span>Form 4</span>
+            </a>
+          </li>
+          <li>
+            <a href="ojt-form-5.php" target="_blank">
+              <i class="bi bi-circle"></i><span>Form 5</span>
+            </a>
+          </li>
+          <li>
+            <a href="ojt-form-6.php" target="_blank">
+              <i class="bi bi-circle"></i><span>Form 6</span>
+            </a>
+          </li>
+          <li>
+            <a href="ojt-form-7.php" target="_blank">
+              <i class="bi bi-circle"></i><span>Form 7</span>
+            </a>
+          </li>
+          <li>
+            <a href="ojt-form-8.php" target="_blank">
+              <i class="bi bi-circle"></i><span>Form 8</span>
+            </a>
+          </li>
+          <li>
+            <a href="ojt-form-9.php" target="_blank">
+              <i class="bi bi-circle"></i><span>Form 9</span>
+            </a>
+          </li>
+          <li>
+            <a href="ojt-form-10.php" target="_blank">
+              <i class="bi bi-circle"></i><span>Form 10</span>
+            </a>
+          </li>
+          <li>
+            <a href="ojt-form-11.php" target="_blank">
+              <i class="bi bi-circle"></i><span>Form 11</span>
             </a>
           </li>
           <li>

@@ -22,6 +22,44 @@ $result = mysqli_stmt_get_result($stmt);
 
 $form = mysqli_fetch_assoc($result);
 
+
+
+$program_chairman = '';
+$program_position = '';
+
+if (
+  isset($form['course'])
+) {
+
+  if (
+    $form['course'] == 'Bachelor of Science in Civil Engineering'
+  ) {
+
+    $program_chairman = 'KIM TYRONE P. CARDENAS, MSCE';
+    $program_position = 'Program Chairman, BSCE';
+
+  }
+
+  else if (
+    $form['course'] == 'Bachelor of Science in Computer Engineering'
+  ) {
+
+    $program_chairman = 'CHARITY L. ORIA, DEng';
+    $program_position = 'Program Chairman, BSCpE';
+
+  }
+
+  else if (
+    $form['course'] == 'Bachelor of Science in Electronics Engineering'
+  ) {
+
+    $program_chairman = 'IVAN ROY S. EVANGELISTA, ME-ECE';
+    $program_position = 'Program Chairman, BSECE';
+
+  }
+
+}
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -46,8 +84,8 @@ $form = mysqli_fetch_assoc($result);
     body {
 
       font-family: "Times New Roman", serif;
-      font-size: 14px;
-      line-height: 1.4;
+      font-size: 16px;
+      line-height: 1.3;
       color: #000;
 
     }
@@ -56,98 +94,75 @@ $form = mysqli_fetch_assoc($result);
       width: 8.5in;
       min-height: 13in;
     }
+    .form-title{
+      font-size: 8px;
+    }
 
     .center {
-
       text-align: center;
-
     }
 
     .justify {
-
       text-align: justify;
-
     }
 
     .header {
-
       margin-bottom: 30px;
-
     }
 
     .title {
-
       font-weight: bold;
       text-transform: uppercase;
-
     }
 
     .mt-20 {
-
       margin-top: 20px;
-
     }
 
     .mt-30 {
-
       margin-top: 30px;
-
     }
 
     .mt-50 {
-
       margin-top: 50px;
-
     }
 
     .signature {
-
       font-weight: bold;
-
     }
 
     .footer {
-
       margin-top: 60px;
       font-size: 12px;
-
     }
 
     @media print {
-
       .no-print {
-
         display: none;
-
       }
-
     }
 
   </style>
 
 </head>
 
-<body>
+<body onload="window.print();">
 
   <div class="no-print">
     <button onclick="window.print();">
       Print
     </button>
   </div>
-
-  <div class="header" style="text-align:right">
-
-    OJT-ARTA Form 01
-
-    <br>
-
-    Revision No.: ___________
-
-    <br>
-
-    Date: __________________
-
-  </div>
+  <table class="form-title">
+    <tr>
+      <td></td>
+      <td width="1%" style="white-space:nowrap; text-align:left" >
+        OJT-ARTA Form 01 <br>
+        Revision No.: ___________<br>
+        Date: __________________
+      </td>
+    </tr>
+  </table>
 
 <table width="100%">
   <tr>
@@ -187,85 +202,53 @@ $form = mysqli_fetch_assoc($result);
   <div class="mt-30">
 
     <strong>
-
       <?php
-
-      echo isset($form['representative'])
-      ? strtoupper($form['representative'])
-      : '';
-
+      echo isset($form['representative']) ? strtoupper($form['representative']) : '';
       ?>
-
     </strong>
 
-
     <?php
-
-    echo isset($form['agency_position'])
-    ? $form['agency_position']
-    : '';
-
-    ?>
-    <br>
-
-    <?php
-
-    echo isset($form['agency'])
-    ? $form['agency']
-    : '';
-
+    echo isset($form['rep_position']) ? '<br>'.$form['rep_position'] : '';
+    echo isset($form['agency']) ? '<br>'.$form['agency'] : '';
     ?>
 
+    <?php 
+      if (!empty($form['agencyaddress1'])) {  
+        echo '<br>'.$form['agencyaddress1']; 
+      }
+      if (!empty($form['agencyaddress2'])) {
+        echo '<br>'.$form['agencyaddress2'];
+      }
+      if (!empty($form['agencyaddress3'])) {
+        echo '<br>'.$form['agencyaddress3'];
+      }
+      if (!empty($form['agencyaddress4'])) {
+        echo '<br>'.$form['agencyaddress4'];
+      }
+      if (!empty($form['agencyaddress5'])) {
+        echo '<br>'.$form['agencyaddress5'];
+      } 
 
-<?php if (!empty($form['agencyaddress1'])) { ?>
-  <?php echo $form['agencyaddress1']; ?>
-<?php } ?>
-
-<?php if (!empty($form['agencyaddress2'])) { ?>
-  , <?php echo $form['agencyaddress2']; ?>
-<?php } ?>
-
-<?php if (!empty($form['agencyaddress3'])) { ?>
-  , <?php echo $form['agencyaddress3']; ?>
-<?php } ?>
-
-<?php if (!empty($form['agencyaddress4'])) { ?>
-  <?php echo $form['agencyaddress4']; ?>
-<?php } ?>
-
-<?php if (!empty($form['agencyaddress5'])) { ?>
-  , <?php echo $form['agencyaddress5']; ?>
-<?php } ?>
+    ?>
 
   </div>
 
 
   <div class="mt-20">
-
     Sir/Madam:
-
   </div>
 
 
   <div class="mt-20">
-
     Peace be with you!!!
-
   </div>
 
 
   <div class="justify mt-20">
-
     The graduating students of
-
     <strong>
-
       <?php
-
-      echo isset($form['course'])
-      ? $form['course']
-      : '';
-
+      echo isset($form['course']) ? $form['course'] : ''; 
       ?>
 
     </strong>
@@ -315,13 +298,21 @@ $form = mysqli_fetch_assoc($result);
 
   <div class="mt-50">
 
+
+<?php
+
+echo'
     <div class="signature">
-      PERCILA M. PANAGDATO, PCpE
+      '.$program_chairman.'
     </div>
 
     <div>
-      OJT Coordinator/Faculty/Date
+      Program Chairman/Date
     </div>
+';
+
+?>
+
 
   </div>
 
@@ -350,18 +341,12 @@ $form = mysqli_fetch_assoc($result);
     <div>
 
       <?php
-
-      echo isset($form['agency_position'])
-      ? $form['agency_position']
-      : '';
-
+      echo isset($form['rep_position']) ? $form['rep_position'] : '';
       ?>
 
     </div>
 
   </div>
-
-
 
 </body>
 
