@@ -41,6 +41,8 @@ if (!$payload) {
 
   exit;
 
+}else{
+  die("asdasd");
 }
 
 $email            = $payload['email'];
