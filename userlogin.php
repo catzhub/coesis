@@ -15,6 +15,7 @@ content="216794808536-2or0j3bikibqm8a1nsf7k3d0b578ampi.apps.googleusercontent.co
 <link href="assets/css/style.css" rel="stylesheet">
 
 <script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 </head>
 
@@ -87,42 +88,41 @@ class="col-lg-8 col-md-8 d-flex flex-column align-items-center justify-content-c
           <div class="g_id_signin"></div>
 
           <script>
-            function handleCredentialResponse(response) {
 
-              $.ajax({
 
-                url: "verify.php",
 
-                type: "POST",
+function handleCredentialResponse(response) {
 
-                dataType: "json",
+  $.post(
 
-                data: {
-                  credential: response.credential
-                },
+    "verify.php",
 
-                success: function(res) {
+    {
+      credential: response.credential
+    },
 
-                  console.log(res);
+    function(res) {
 
-                  if (res.status == "success") {
+      console.log(res);
 
-                    window.location =
-                    res.redirect;
+      if (res.status == "success") {
 
-                  }
+        location.href = res.redirect;
 
-                },
+      } else {
 
-                error: function(xhr) {
+        alert(res.message);
 
-                  console.log(xhr.responseText);
+      }
 
-                }
+    },
 
-              });
+    "json"
 
-            }
+  );
+
+}
+
           </script>
         </div>
       </form>

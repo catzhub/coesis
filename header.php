@@ -1,5 +1,6 @@
 
 <?php 
+  // session_start();
   require 'db/dbconnect.php';
  ?>
 
@@ -172,9 +173,10 @@
 
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
             <img
-              src="<?php echo htmlspecialchars($_SESSION['picture']); ?>"
+              src="<?php echo $_SESSION['picture']; ?>"
               alt="Profile"
-              class="rounded-circle">
+              class="rounded-circle"
+              referrerpolicy="no-referrer">
 
             <span class="d-none d-md-block dropdown-toggle ps-2">
               <?php
@@ -188,7 +190,7 @@
               <h6>
 
               <?php
-              echo htmlspecialchars($_SESSION['user_name']);
+              echo htmlspecialchars($_SESSION['full_name']);
               ?>
 
               </h6>
@@ -196,7 +198,7 @@
               <span>
 
               <?php
-              echo htmlspecialchars($_SESSION['user_email']);
+              echo htmlspecialchars($_SESSION['email']);
               ?>
 
               </span>
