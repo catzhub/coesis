@@ -87,43 +87,31 @@ class="col-lg-8 col-md-8 d-flex flex-column align-items-center justify-content-c
           <div class="g_id_signin"></div>
 
           <script>
-function handleCredentialResponse(response) {
+            function handleCredentialResponse(response) {
 
-  $.ajax({
+              $.ajax({
 
-    url: "verify.php",
+                url: "verify.php",
 
-    type: "POST",
+                type: "POST",
 
-    data: {
-      credential: response.credential
-    },
+                data: {
+                  credential: response.credential
+                },
+                success: function(res) {
+                  console.log(res);
+                  if (res.status == "success") {
+                    window.location = res.redirect;
+                  }
+                }
 
-    success: function(res) {
+              });
 
-      console.log(res);
-
-      if (res.status == "success") {
-
-        window.location =
-        res.redirect;
-
-      }
-
-    }
-
-  });
-
-}
+            }
           </script>
-
-
         </div>
-
       </form>
-
     </div>
-
   </div>
 
 
@@ -152,10 +140,6 @@ BootstrapMade
 
 
 <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-
-
-
 </body>
 
 </html>
