@@ -10,8 +10,7 @@ require 'db/dbconnect.php';
 
 if (!isset($_SESSION['email'])) {
 
-  header("Location:userlogin.php");
-  exit;
+   die("Session not found");
 
 }
 
