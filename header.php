@@ -1,8 +1,21 @@
+<?php
 
-<?php 
+if (session_status() === PHP_SESSION_NONE) {
+
   session_start();
-  require 'db/dbconnect.php';
- ?>
+
+}
+
+require 'db/dbconnect.php';
+
+if (!isset($_SESSION['email'])) {
+
+  header("Location:userlogin.php");
+  exit;
+
+}
+
+?>
 
 
 
