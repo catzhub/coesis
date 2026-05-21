@@ -240,14 +240,12 @@ $_SESSION['picture'] = $picture;
 
 ob_clean();
 
-exit;
+echo json_encode([
 
-// echo json_encode([
+  "status"=>"success",
+  "redirect"=>"forms-elements.php"
 
-//   "status"=>"success",
-//   "redirect"=>"forms-elements.php"
-
-// ]);
+]);
 
 exit;
 ?>
