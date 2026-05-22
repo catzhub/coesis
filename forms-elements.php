@@ -193,10 +193,7 @@
           agencyaddress5='$agencyaddress5'
         WHERE email='$email'
       ";
-      $stmt->close();
       if (mysqli_query($conn, $query)) {
-        # code...
-        // echo mysqli_affected_rows($conn);
         header('location: forms-elements.php');
         exit();
       }else{
