@@ -301,9 +301,51 @@
 
 $stmt = $conn->prepare("
 
-  SELECT *
+  SELECT
+    ojt_id,
+    user_id,
+    lastname,
+    firstname,
+    middlename,
+    municipality,
+    province,
+    dob,
+    birthplace,
+    height,
+    weight,
+    religion,
+    marital_status,
+    gender,
+    citizenship,
+    contactno,
+    email,
+    dialect,
+    course,
+    major,
+    datestart,
+    ojthours,
+    father,
+    fatheroccupation,
+    fatheraddress,
+    mother,
+    motheroccupation,
+    motheraddress,
+    guardian,
+    guardianaddress,
+    agencyrepresentative,
+    rep_position,
+    agencyaddress1,
+    agencyaddress2,
+    agencyaddress3,
+    agencyaddress4,
+    agencyaddress5,
+    created_at,
+    updated_at
+
   FROM ojt_form_details
+
   WHERE email=?
+
   LIMIT 1
 
 ");
@@ -315,9 +357,8 @@ $stmt->bind_param(
 
 $stmt->execute();
 
-$stmt->store_result();
-
 $stmt->bind_result(
+
   $ojt_id,
   $user_id,
   $lastname,
@@ -357,9 +398,56 @@ $stmt->bind_result(
   $agencyaddress5,
   $created_at,
   $updated_at
+
 );
 
 $stmt->fetch();
+
+$form = [
+
+  'ojt_id' => $ojt_id,
+  'user_id' => $user_id,
+  'lastname' => $lastname,
+  'firstname' => $firstname,
+  'middlename' => $middlename,
+  'municipality' => $municipality,
+  'province' => $province,
+  'dob' => $dob,
+  'birthplace' => $birthplace,
+  'height' => $height,
+  'weight' => $weight,
+  'religion' => $religion,
+  'marital_status' => $marital_status,
+  'gender' => $gender,
+  'citizenship' => $citizenship,
+  'contactno' => $contactno,
+  'email' => $email,
+  'dialect' => $dialect,
+  'course' => $course,
+  'major' => $major,
+  'datestart' => $datestart,
+  'ojthours' => $ojthours,
+  'father' => $father,
+  'fatheroccupation' => $fatheroccupation,
+  'fatheraddress' => $fatheraddress,
+  'mother' => $mother,
+  'motheroccupation' => $motheroccupation,
+  'motheraddress' => $motheraddress,
+  'guardian' => $guardian,
+  'guardianaddress' => $guardianaddress,
+  'agencyrepresentative' => $agencyrepresentative,
+  'rep_position' => $rep_position,
+  'agencyaddress1' => $agencyaddress1,
+  'agencyaddress2' => $agencyaddress2,
+  'agencyaddress3' => $agencyaddress3,
+  'agencyaddress4' => $agencyaddress4,
+  'agencyaddress5' => $agencyaddress5,
+  'created_at' => $created_at,
+  'updated_at' => $updated_at
+
+];
+
+
   
 
 ?>
