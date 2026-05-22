@@ -400,7 +400,7 @@
 
     <section class="section">
       <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-12">
 
           <div class="card">
             <div class="card-body">
@@ -819,162 +819,104 @@
                 </div>
                 <div class="row mb-3">
 
-  <div class="col-sm-6">
+                  <div class="col-sm-6">
 
-    <label class="form-label">
-    Course
-    </label>
+                    <label class="form-label">Course</label>
+                    <select class="form-select" name="course">
+                      <option value="">Select</option>
 
-    <select class="form-select"
-    name="course">
+                      <option value="Bachelor of Science in Civil Engineering"
+                        <?php
+                          if (isset($form['course']) && $form['course'] == 'Bachelor of Science in Civil Engineering') {
+                            echo 'selected';
+                          }
+                        ?>
+                      >
+                        Bachelor of Science in Civil Engineering
+                      </option>
+                      <option value="Bachelor of Science in Computer Engineering"
+                        <?php
+                          if (isset($form['course']) && $form['course'] == 'Bachelor of Science in Computer Engineering') {
+                            echo 'selected';
+                          }
+                        ?>
+                      >
+                      Bachelor of Science in Computer Engineering
+                      </option>
+                      <option value="Bachelor of Science in Electronics Engineering"
+                        <?php
+                          if (isset($form['course']) && $form['course'] == 'Bachelor of Science in Electronics Engineering') {
+                            echo 'selected';
+                          }
+                        ?>
+                      >
+                      Bachelor of Science in Electronics Engineering
+                      </option>
+                    </select>
+                  </div>
 
-      <option value="">
-      Select
-      </option>
+                  <div class="col-sm-6">
+                    <label class="form-label">
+                    Major
+                    </label>
 
-      <option value="Bachelor of Science in Civil Engineering"
+                    <input type="text" class="form-control" name="major"
+                      value="<?php
 
-      <?php
+                      echo isset($form['major'])
+                      ? $form['major']
+                      : '';
 
-      if (
-        isset($form['course'])
-        &&
-        $form['course'] == 'Bachelor of Science in Civil Engineering'
-      ) {
+                      ?>">
 
-        echo 'selected';
-
-      }
-
-      ?>
-
-      >
-
-      Bachelor of Science in Civil Engineering
-
-      </option>
-
-      <option value="Bachelor of Science in Computer Engineering"
-
-      <?php
-
-      if (
-        isset($form['course'])
-        &&
-        $form['course'] == 'Bachelor of Science in Computer Engineering'
-      ) {
-
-        echo 'selected';
-
-      }
-
-      ?>
-
-      >
-
-      Bachelor of Science in Computer Engineering
-
-      </option>
-
-      <option value="Bachelor of Science in Electronics Engineering"
-
-      <?php
-
-      if (
-        isset($form['course'])
-        &&
-        $form['course'] == 'Bachelor of Science in Electronics Engineering'
-      ) {
-
-        echo 'selected';
-
-      }
-
-      ?>
-
-      >
-
-      Bachelor of Science in Electronics Engineering
-
-      </option>
-
-    </select>
-
-  </div>
-
-  <div class="col-sm-6">
-
-    <label class="form-label">
-    Major
-    </label>
-
-    <input type="text"
-    class="form-control"
-    name="major"
-
-    value="<?php
-
-    echo isset($form['major'])
-    ? $form['major']
-    : '';
-
-    ?>">
-
-  </div>
-
-</div>
-
-
-<div class="row mb-3">
-
-  <div class="col-sm-3">
-
-    <label class="form-label">
-    Date of Start
-    </label>
-
-    <input type="date"
-    class="form-control"
-    name="datestart"
-
-    value="<?php
-
-    echo isset($form['datestart'])
-    ? $form['datestart']
-    : '';
-
-    ?>">
-
-  </div>
-
-  <div class="col-sm-3">
-
-    <label class="form-label">
-    OJT No. of Hours
-    </label>
-
-    <input type="number"
-    class="form-control"
-    name="ojthours"
-    readonly
-
-    value="<?php
-
-    echo isset($form['ojthours'])
-    ? $form['ojthours']
-    : '240';
-
-    ?>">
-
-  </div>
-
-</div>
+                  </div>
+                </div>
 
 
 
                 <div class="row mb-3">
+                  <div class="col-sm-6">
+                    <label class="form-label">
+                    Date of Start
+                    </label>
+
+                    <input type="date" class="form-control" name="datestart" 
+                      value="<?php
+                      echo isset($form['datestart'])
+                      ? $form['datestart']
+                      : '';
+
+                      ?>">
+
+                  </div>
+
+                  <div class="col-sm-6">
+
+                    <label class="form-label">
+                    OJT No. of Hours
+                    </label>
+
+                    <input type="number"
+                    class="form-control"
+                    name="ojthours"
+                    readonly
+
+                    value="<?php
+
+                    echo isset($form['ojthours'])
+                    ? $form['ojthours']
+                    : '240';
+
+                    ?>">
+
+                  </div>
+
+                </div>
+
+
+                <div class="row mb-3">
                   <!-- <label class="col-sm-2 col-form-label">Submit Button</label> -->
-                  <div class="col-sm-10">
+                  <div class="col-sm-12">
                     <button type="submit" class="btn btn-primary" name="request" value="student">Submit Form</button>
                   </div>
                 </div>
@@ -986,7 +928,7 @@
         </div>
 
 
-        <div class="col-lg-6">
+        <div class="col-lg-12">
 
           <div class="card">
             <div class="card-body">
@@ -1063,7 +1005,7 @@
         </div>
 
 
-        <div class="col-lg-6">
+        <div class="col-lg-12">
 
           <div class="card">
             <div class="card-body">
