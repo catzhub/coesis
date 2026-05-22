@@ -101,8 +101,6 @@
       ";
 
       if (mysqli_query($conn, $query)) {
-        header('location: forms-elements.php');
-        exit();
       }else{
         echo 'Opps.. Please contact administrator';
         exit();
@@ -144,8 +142,6 @@
       ";
 
       if (mysqli_query($conn, $query)) {
-        header('location: forms-elements.php');
-        exit();
       }else{
         echo 'Opps.. Please contact administrator';
         exit();
@@ -188,8 +184,6 @@
       ";
 
       if (mysqli_query($conn, $query)) {
-        header('location: forms-elements.php');
-        exit();
       }else{
         echo 'Opps.. Please contact administrator';
         exit();
@@ -214,9 +208,7 @@
     ";
 
   if ($select = mysqli_query($conn, $query)) {
-    $forms = mysqli_fetch_assoc($select);
-    header('location: forms-elements.php');
-    exit();
+    $form = mysqli_fetch_assoc($select);
   }else{
     echo 'Opps.. Please contact administrator';
     exit();
