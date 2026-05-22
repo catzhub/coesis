@@ -2,7 +2,8 @@
 
   require 'include/auth.php';
   require 'db/dbconnect.php';
-
+  var_dump($_SESSION);
+  exit();
   $success = '';
   if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $request = isset($_POST['request']) ? $_POST['request'] : '';
