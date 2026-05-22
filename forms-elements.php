@@ -11,7 +11,7 @@
   $success = '';
   if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $request = isset($_POST['request']) ? $_POST['request'] : '';
-    $email = isset($_SESSION['email']) ? $_SESSION['email'] : '';
+    $email = isset($_SESSION['email']) ? mysqli_real_escape_string($conn,$_SESSION['email']) : '';
 
     /* ============================
        CHECK EXISTING RECORD
@@ -25,11 +25,11 @@
     ";
     $result = mysqli_query($conn, $query);
     if (mysqli_num_rows($result)==1) {
-      $existing = 1;
+      $existing = true;
       $rows = mysqli_fetch_assoc($result);
       $ojt_id = $rows['ojt_id'];
     }else{
-      $existing = 0;
+      $existing = false;
     }
     
     /* ============================
@@ -70,12 +70,10 @@
       $major = mysqli_real_escape_string($conn, $_POST['major']);
       $datestart = mysqli_real_escape_string($conn, $_POST['datestart']);
       $ojthours = mysqli_real_escape_string($conn, $_POST['ojthours']);
-      $email = mysqli_real_escape_string($conn, $email);
 
       $query = "
 
         UPDATE ojt_form_details
-
         SET
 
           lastname='$lastname',
@@ -102,20 +100,11 @@
 
       ";
 
-      // $stmt= mysqli_query($conn, $query);
       if (mysqli_query($conn, $query)) {
-        # code...
-        if (mysqli_affected_rows($conn)==1) {
-          # code...
-          header('location: forms-elements.php');
-
-          exit();
-        }else{
-          echo "Not Saved";
-          exit();
-        }
+        header('location: forms-elements.php');
+        exit();
       }else{
-        echo mysqli_error($conn);
+        echo 'Opps.. Please contact administrator';
         exit();
       }
 
@@ -153,10 +142,14 @@
           guardianaddress='$guardianaddress'
         WHERE email='$email'
       ";
-      mysqli_query($conn, $query);
 
-      header('location: forms-elements.php');
-      exit();
+      if (mysqli_query($conn, $query)) {
+        header('location: forms-elements.php');
+        exit();
+      }else{
+        echo 'Opps.. Please contact administrator';
+        exit();
+      }
 
     }
 
@@ -193,11 +186,12 @@
           agencyaddress5='$agencyaddress5'
         WHERE email='$email'
       ";
+
       if (mysqli_query($conn, $query)) {
         header('location: forms-elements.php');
         exit();
       }else{
-        echo mysqli_error($conn);
+        echo 'Opps.. Please contact administrator';
         exit();
       }
     }
@@ -210,168 +204,180 @@
      GET OJT ID
   ============================ */
 
-  $ojt_id = isset($_GET['ojt_id']) ? $_GET['ojt_id'] : 0;
+  // $ojt_id = isset($_GET['ojt_id']) ? $_GET['ojt_id'] : 0;
 
   /* ============================
      DEFAULT FORM ARRAY
   ============================ */
+  $query = "
+    SELECT * FROM ojt_form_details WHERE email = '$email';
+    ";
 
-  $form = array();
+  if ($select = mysqli_query($conn, $query)) {
+    $forms = mysqli_fetch_assoc($select);
+    header('location: forms-elements.php');
+    exit();
+  }else{
+    echo 'Opps.. Please contact administrator';
+    exit();
+  }
+
+  // $form = array();
 
  
-  $stmt = $conn->prepare("
+  // $stmt = $conn->prepare("
 
-    SELECT
-      ojt_id,
-      user_id,
-      lastname,
-      firstname,
-      middlename,
-      municipality,
-      province,
-      dob,
-      birthplace,
-      height,
-      weight,
-      religion,
-      marital_status,
-      gender,
-      citizenship,
-      contactno,
-      email,
-      dialect,
-      course,
-      major,
-      datestart,
-      ojthours,
-      father,
-      fatheroccupation,
-      fatheraddress,
-      mother,
-      motheroccupation,
-      motheraddress,
-      guardian,
-      guardianaddress,
-      agency,
-      representative,
-      rep_position,
-      agencycontact,
-      agencyaddress1,
-      agencyaddress2,
-      agencyaddress3,
-      agencyaddress4,
-      agencyaddress5,
-      created_at,
-      updated_at
+  //   SELECT
+  //     ojt_id,
+  //     user_id,
+  //     lastname,
+  //     firstname,
+  //     middlename,
+  //     municipality,
+  //     province,
+  //     dob,
+  //     birthplace,
+  //     height,
+  //     weight,
+  //     religion,
+  //     marital_status,
+  //     gender,
+  //     citizenship,
+  //     contactno,
+  //     email,
+  //     dialect,
+  //     course,
+  //     major,
+  //     datestart,
+  //     ojthours,
+  //     father,
+  //     fatheroccupation,
+  //     fatheraddress,
+  //     mother,
+  //     motheroccupation,
+  //     motheraddress,
+  //     guardian,
+  //     guardianaddress,
+  //     agency,
+  //     representative,
+  //     rep_position,
+  //     agencycontact,
+  //     agencyaddress1,
+  //     agencyaddress2,
+  //     agencyaddress3,
+  //     agencyaddress4,
+  //     agencyaddress5,
+  //     created_at,
+  //     updated_at
 
-    FROM ojt_form_details
+  //   FROM ojt_form_details
 
-    WHERE email=?
+  //   WHERE email=?
 
-    LIMIT 1
+  //   LIMIT 1
 
-  ");
+  // ");
 
-  $stmt->bind_param(
-    "s",
-    $_SESSION['email']
-  );
+  // $stmt->bind_param(
+  //   "s",
+  //   $_SESSION['email']
+  // );
 
-  $stmt->execute();
+  // $stmt->execute();
 
-  $stmt->bind_result(
+  // $stmt->bind_result(
 
-    $ojt_id,
-    $user_id,
-    $lastname,
-    $firstname,
-    $middlename,
-    $municipality,
-    $province,
-    $dob,
-    $birthplace,
-    $height,
-    $weight,
-    $religion,
-    $marital_status,
-    $gender,
-    $citizenship,
-    $contactno,
-    $email,
-    $dialect,
-    $course,
-    $major,
-    $datestart,
-    $ojthours,
-    $father,
-    $fatheroccupation,
-    $fatheraddress,
-    $mother,
-    $motheroccupation,
-    $motheraddress,
-    $guardian,
-    $guardianaddress,
-    $agency,
-    $agencyrepresentative,
-    $rep_position,
-    $agencycontact,
-    $agencyaddress1,
-    $agencyaddress2,
-    $agencyaddress3,
-    $agencyaddress4,
-    $agencyaddress5,
-    $created_at,
-    $updated_at
+  //   $ojt_id,
+  //   $user_id,
+  //   $lastname,
+  //   $firstname,
+  //   $middlename,
+  //   $municipality,
+  //   $province,
+  //   $dob,
+  //   $birthplace,
+  //   $height,
+  //   $weight,
+  //   $religion,
+  //   $marital_status,
+  //   $gender,
+  //   $citizenship,
+  //   $contactno,
+  //   $email,
+  //   $dialect,
+  //   $course,
+  //   $major,
+  //   $datestart,
+  //   $ojthours,
+  //   $father,
+  //   $fatheroccupation,
+  //   $fatheraddress,
+  //   $mother,
+  //   $motheroccupation,
+  //   $motheraddress,
+  //   $guardian,
+  //   $guardianaddress,
+  //   $agency,
+  //   $agencyrepresentative,
+  //   $rep_position,
+  //   $agencycontact,
+  //   $agencyaddress1,
+  //   $agencyaddress2,
+  //   $agencyaddress3,
+  //   $agencyaddress4,
+  //   $agencyaddress5,
+  //   $created_at,
+  //   $updated_at
 
-  );
+  // );
 
-  $stmt->fetch();
+  // $stmt->fetch();
 
-  $form = [
+  // $form = [
 
-    'ojt_id' => $ojt_id,
-    'user_id' => $user_id,
-    'lastname' => $lastname,
-    'firstname' => $firstname,
-    'middlename' => $middlename,
-    'municipality' => $municipality,
-    'province' => $province,
-    'dob' => $dob,
-    'birthplace' => $birthplace,
-    'height' => $height,
-    'weight' => $weight,
-    'religion' => $religion,
-    'marital_status' => $marital_status,
-    'gender' => $gender,
-    'citizenship' => $citizenship,
-    'contactno' => $contactno,
-    'email' => $email,
-    'dialect' => $dialect,
-    'course' => $course,
-    'major' => $major,
-    'datestart' => $datestart,
-    'ojthours' => $ojthours,
-    'father' => $father,
-    'fatheroccupation' => $fatheroccupation,
-    'fatheraddress' => $fatheraddress,
-    'mother' => $mother,
-    'motheroccupation' => $motheroccupation,
-    'motheraddress' => $motheraddress,
-    'guardian' => $guardian,
-    'guardianaddress' => $guardianaddress,
-    'agency' => $agency,
-    'representative' => $agencyrepresentative,
-    'rep_position' => $rep_position,
-    'agencycontact' => $agencycontact,
-    'agencyaddress1' => $agencyaddress1,
-    'agencyaddress2' => $agencyaddress2,
-    'agencyaddress3' => $agencyaddress3,
-    'agencyaddress4' => $agencyaddress4,
-    'agencyaddress5' => $agencyaddress5,
-    'created_at' => $created_at,
-    'updated_at' => $updated_at
+  //   'ojt_id' => $ojt_id,
+  //   'user_id' => $user_id,
+  //   'lastname' => $lastname,
+  //   'firstname' => $firstname,
+  //   'middlename' => $middlename,
+  //   'municipality' => $municipality,
+  //   'province' => $province,
+  //   'dob' => $dob,
+  //   'birthplace' => $birthplace,
+  //   'height' => $height,
+  //   'weight' => $weight,
+  //   'religion' => $religion,
+  //   'marital_status' => $marital_status,
+  //   'gender' => $gender,
+  //   'citizenship' => $citizenship,
+  //   'contactno' => $contactno,
+  //   'email' => $email,
+  //   'dialect' => $dialect,
+  //   'course' => $course,
+  //   'major' => $major,
+  //   'datestart' => $datestart,
+  //   'ojthours' => $ojthours,
+  //   'father' => $father,
+  //   'fatheroccupation' => $fatheroccupation,
+  //   'fatheraddress' => $fatheraddress,
+  //   'mother' => $mother,
+  //   'motheroccupation' => $motheroccupation,
+  //   'motheraddress' => $motheraddress,
+  //   'guardian' => $guardian,
+  //   'guardianaddress' => $guardianaddress,
+  //   'agency' => $agency,
+  //   'representative' => $agencyrepresentative,
+  //   'rep_position' => $rep_position,
+  //   'agencycontact' => $agencycontact,
+  //   'agencyaddress1' => $agencyaddress1,
+  //   'agencyaddress2' => $agencyaddress2,
+  //   'agencyaddress3' => $agencyaddress3,
+  //   'agencyaddress4' => $agencyaddress4,
+  //   'agencyaddress5' => $agencyaddress5,
+  //   'created_at' => $created_at,
+  //   'updated_at' => $updated_at
 
-  ];
+  // ];
 
 
   
