@@ -8,9 +8,8 @@ $stmt = $pdo->prepare("
 	SELECT * FROM ojt_form_details
 	WHERE email = ?"
 	);
-if (condition) {
+if ($stmt->execute([$email])) {
 	# code...
-$stmt->execute([$email]);
 var_dump($stmt);
 }else{
 	var_dump($_SESSION);
