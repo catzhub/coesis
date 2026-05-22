@@ -215,8 +215,6 @@
 
   if ($select = mysqli_query($conn, $query)) {
     $form = mysqli_fetch_assoc($select);
-    header("Location: forms-elements.php?success=1");
-    exit();
   }else{
     echo 'Opps.. Please contact administrator';
     exit();
