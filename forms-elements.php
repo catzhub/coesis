@@ -123,11 +123,21 @@
 
       ";
       $stmt->close();
-      $stmt= mysqli_query($conn, $query);
+      // $stmt= mysqli_query($conn, $query);
+      if (mysqli_query($conn, $query)) {
+        # code...
+        if (mysqli_affected_rows($conn)==1) {
+          # code...
+          header('location: forms-elements.php');
 
-      header('location: forms-elements.php');
+          exit();
+        }else{
+          echo "Not Saved";
+        }
+      }else{
+        echo mysqli_error($conn);
+      }
 
-      exit();
 
     }
 
