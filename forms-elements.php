@@ -8,10 +8,10 @@
 
   require 'include/auth.php';
   require 'db/dbconnect.php';
+  $email = isset($_SESSION['email']) ? mysqli_real_escape_string($conn,$_SESSION['email']) : '';
   $success = '';
   if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $request = isset($_POST['request']) ? $_POST['request'] : '';
-    $email = isset($_SESSION['email']) ? mysqli_real_escape_string($conn,$_SESSION['email']) : '';
 
     /* ============================
        CHECK EXISTING RECORD
@@ -21,10 +21,9 @@
       SELECT ojt_id
       FROM ojt_form_details
       WHERE email='$email'
-      LIMIT 1
     ";
     $result = mysqli_query($conn, $query);
-    if (mysqli_num_rows($result)==1) {
+    if (mysqli_num_rows($result)>0) {
       $existing = true;
       $rows = mysqli_fetch_assoc($result);
       $ojt_id = $rows['ojt_id'];
@@ -99,10 +98,10 @@
         WHERE email='$email'
 
       ";
-
-      if (mysqli_query($conn, $query)) {
-        header("Location: forms-elements.php?success=1");
-        exit();
+      $update = mysqli_query($conn, $query);
+      if ($update) {
+          header("Location: forms-elements.php?success=1");
+          exit();
       }else{
         echo 'Opps.. Please contact administrator';
         exit();
@@ -212,9 +211,11 @@
   $query = "
     SELECT * FROM ojt_form_details WHERE email = '$email';
     ";
-
-  if ($select = mysqli_query($conn, $query)) {
+  $select = mysqli_query($conn, $query);
+  if ($select) {
     $form = mysqli_fetch_assoc($select);
+    // var_dump($form);
+    // exit();
   }else{
     echo 'Opps.. Please contact administrator';
     exit();
