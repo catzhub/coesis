@@ -66,89 +66,101 @@
       $ojt_id = $existing['ojt_id'];
     }
 
-    /* ============================
-       STUDENT FORM
-    ============================ */
+/* ============================
+   STUDENT FORM
+============================ */
 
-    if ($request == 'student') {
+if ($request == 'student') {
 
-      $lastname = $_POST['lastname'];
-      $firstname = $_POST['firstname'];
-      $middlename = $_POST['middlename'];
-      $municipality = $_POST['municipality'];
-      $province = $_POST['province'];
-      $dob = $_POST['dob'];
-      $birthplace = $_POST['birthplace'];
-      $height = $_POST['height'];
-      $weight = $_POST['weight'];
-      $religion = $_POST['religion'];
-      $marital_status = $_POST['marital_status'];
-      $gender = $_POST['gender'];
-      $citizenship = $_POST['citizenship'];
-      $contactno = $_POST['contactno'];
-      $dialect = $_POST['dialect'];
-      $course = $_POST['course'];
-      $major = $_POST['major'];
-      $datestart = !empty($_POST['datestart'])? $_POST['datestart']: null;
-      $ojthours = $_POST['ojthours'];
+  $lastname = $_POST['lastname'];
+  $firstname = $_POST['firstname'];
+  $middlename = $_POST['middlename'];
+  $municipality = $_POST['municipality'];
+  $province = $_POST['province'];
+  $dob = $_POST['dob'];
+  $birthplace = $_POST['birthplace'];
+  $height = $_POST['height'];
+  $weight = $_POST['weight'];
+  $religion = $_POST['religion'];
+  $marital_status = $_POST['marital_status'];
+  $gender = $_POST['gender'];
+  $citizenship = $_POST['citizenship'];
+  $contactno = $_POST['contactno'];
+  $dialect = $_POST['dialect'];
+  $course = $_POST['course'];
+  $major = $_POST['major'];
 
-      $stmt = $conn->prepare("
-        UPDATE ojt_form_details
-        SET
-          lastname=?,
-          firstname=?,
-          middlename=?,
-          municipality=?,
-          province=?,
-          dob=?,
-          birthplace=?,
-          height=?,
-          weight=?,
-          religion=?,
-          marital_status=?,
-          gender=?,
-          citizenship=?,
-          contactno=?,
-          dialect=?,
-          course=?,
-          major=?,
-          datestart=?,
-          ojthours=?
-        WHERE email=?
-      ");
+  $datestart =
+  !empty($_POST['datestart'])
+  ? $_POST['datestart']
+  : null;
 
-      $stmt->bind_param(
-        "sssssssddsssssssssis",
-        $lastname,
-        $firstname,
-        $middlename,
-        $municipality,
-        $province,
-        $dob,
-        $birthplace,
-        $height,
-        $weight,
-        $religion,
-        $marital_status,
-        $gender,
-        $citizenship,
-        $contactno,
-        $dialect,
-        $course,
-        $major,
-        $datestart,
-        $ojthours,
-        $email
-      );
+  $ojthours = $_POST['ojthours'];
 
-      // if ($stmt->execute()) {
-        # code...
-      $stmt->execute();
-      header('location: forms-elements.php');
-      exit();
-      
+  $stmt = $conn->prepare("
 
-    }
+    UPDATE ojt_form_details
+
+    SET
+
+      lastname=?,
+      firstname=?,
+      middlename=?,
+      municipality=?,
+      province=?,
+      dob=?,
+      birthplace=?,
+      height=?,
+      weight=?,
+      religion=?,
+      marital_status=?,
+      gender=?,
+      citizenship=?,
+      contactno=?,
+      dialect=?,
+      course=?,
+      major=?,
+      datestart=?,
+      ojthours=?
+
+    WHERE email=?
+
+  ");
+
+  $stmt->bind_param(
+
+    "sssssssddsssssssssss",
+
+    $lastname,
+    $firstname,
+    $middlename,
+    $municipality,
+    $province,
+    $dob,
+    $birthplace,
+    $height,
+    $weight,
+    $religion,
+    $marital_status,
+    $gender,
+    $citizenship,
+    $contactno,
+    $dialect,
+    $course,
+    $major,
+    $datestart,
+    $ojthours,
+    $email
+
+  );
+
+  $stmt->execute();
+
+  header('location: forms-elements.php');
+
+  exit();
+
+}
 
     /* ============================
        PARENT FORM
