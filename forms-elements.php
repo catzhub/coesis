@@ -1,4 +1,10 @@
 <?php
+  ini_set('display_errors', 1);
+  ini_set('display_startup_errors', 1);
+
+  error_reporting(E_ALL);
+
+  mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
   require 'include/auth.php';
   require 'db/dbconnect.php';
@@ -271,6 +277,8 @@
      SEARCH EXISTING RECORD
   ============================ */
 
+  var_dump($_SESSION);
+  exit();
 
   $stmt = $conn->prepare("
     SELECT *
@@ -290,10 +298,8 @@
 
   $form = mysqli_fetch_assoc($result);
   // print_r($form);
+
   
-  
-  var_dump($_SESSION);
-  exit();
 
 ?>
 <?php require('header.php'); ?>
