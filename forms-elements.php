@@ -13,25 +13,37 @@
     $request = isset($_POST['request']) ? $_POST['request'] : '';
     $email = isset($_SESSION['email']) ? $_SESSION['email'] : '';
 
-    /* ============================
-       CHECK EXISTING RECORD
-    ============================ */
+  /* ============================
+     CHECK EXISTING RECORD
+  ============================ */
 
-    $stmt = $conn->prepare("
+  $stmt = $conn->prepare("
+
     SELECT ojt_id
     FROM ojt_form_details
     WHERE email=?
     LIMIT 1
-    ");
 
-    $stmt->bind_param(
-      "s",
-      $email
-    );
+  ");
 
-    $stmt->execute();
-    $result = mysqli_stmt_get_result($stmt);
-    $existing = mysqli_fetch_assoc($result);
+  $stmt->bind_param(
+    "s",
+    $email
+  );
+
+  $stmt->execute();
+
+  $stmt->bind_result(
+    $ojt_id
+  );
+
+  $stmt->fetch();
+
+  $existing = [
+
+    'ojt_id' => $ojt_id
+
+  ];
 
     /* ============================
        CREATE BLANK RECORD
