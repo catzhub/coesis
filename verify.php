@@ -1,6 +1,6 @@
 <?php
 
-header('location:test.php');
+// header('location:test.php');
 require_once 'vendor/autoload.php';
 
 session_start();
