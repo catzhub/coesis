@@ -1,6 +1,5 @@
 <?php
 
-  session_start();
   require 'include/auth.php';
   require 'db/dbconnect.php';
 
