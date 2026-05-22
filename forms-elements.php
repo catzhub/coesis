@@ -280,27 +280,86 @@
   // var_dump($_SESSION);
   // exit();
 
-  $stmt = $conn->prepare("
-    SELECT *
-    FROM ojt_form_details
-    WHERE email=?
+  // $stmt = $conn->prepare("
+  //   SELECT *
+  //   FROM ojt_form_details
+  //   WHERE email=?
 
-    LIMIT 1
-  ");
+  //   LIMIT 1
+  // ");
 
-  $stmt->bind_param(
-    "s",
-    $_SESSION['email']
-  );
+  // $stmt->bind_param(
+  //   "s",
+  //   $_SESSION['email']
+  // );
 
-  $stmt->execute();
-  $result =
-  $stmt->get_result();
+  // $stmt->execute();
+  // $result = $stmt->get_result();
 
-  $form =
-  $result->fetch_assoc();
+  // $form = $result->fetch_assoc();
   // print_r($form);
 
+$stmt = $conn->prepare("
+
+  SELECT *
+  FROM ojt_form_details
+  WHERE email=?
+  LIMIT 1
+
+");
+
+$stmt->bind_param(
+  "s",
+  $_SESSION['email']
+);
+
+$stmt->execute();
+
+$stmt->store_result();
+
+$stmt->bind_result(
+  $ojt_id,
+  $user_id,
+  $lastname,
+  $firstname,
+  $middlename,
+  $municipality,
+  $province,
+  $dob,
+  $birthplace,
+  $height,
+  $weight,
+  $religion,
+  $marital_status,
+  $gender,
+  $citizenship,
+  $contactno,
+  $email,
+  $dialect,
+  $course,
+  $major,
+  $datestart,
+  $ojthours,
+  $father,
+  $fatheroccupation,
+  $fatheraddress,
+  $mother,
+  $motheroccupation,
+  $motheraddress,
+  $guardian,
+  $guardianaddress,
+  $agencyrepresentative,
+  $rep_position,
+  $agencyaddress1,
+  $agencyaddress2,
+  $agencyaddress3,
+  $agencyaddress4,
+  $agencyaddress5,
+  $created_at,
+  $updated_at
+);
+
+$stmt->fetch();
   
 
 ?>
