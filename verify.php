@@ -47,8 +47,8 @@ session_write_close();
 echo json_encode([
 
   "status" => "success",
-  "redirect" => "forms-elements.php"
-  // "redirect" => "test.php"
+  // "redirect" => "forms-elements.php"
+  "redirect" => "test.php"
 
 ]);
 
