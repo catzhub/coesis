@@ -1,5 +1,5 @@
 <?php
 
-// require 'vendor/autoload.php';
+session_start();
 
-echo "Composer is working!";
+var_dump($_SESSION);
