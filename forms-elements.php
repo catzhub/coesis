@@ -294,9 +294,11 @@
   );
 
   $stmt->execute();
-  $result = mysqli_stmt_get_result($stmt);
+  $result =
+  $stmt->get_result();
 
-  $form = mysqli_fetch_assoc($result);
+  $form =
+  $result->fetch_assoc();
   // print_r($form);
 
   
