@@ -13,57 +13,36 @@
     $request = isset($_POST['request']) ? $_POST['request'] : '';
     $email = isset($_SESSION['email']) ? $_SESSION['email'] : '';
 
-  /* ============================
-     CHECK EXISTING RECORD
-  ============================ */
+    /* ============================
+       CHECK EXISTING RECORD
+    ============================ */
 
-  $stmt = $conn->prepare("
-
-    SELECT ojt_id
-    FROM ojt_form_details
-    WHERE email=?
-    LIMIT 1
-
-  ");
-
-  $stmt->bind_param(
-    "s",
-    $email
-  );
-
-  $stmt->execute();
-
-  $stmt->bind_result(
-    $ojt_id
-  );
-
-  $stmt->fetch();
-
-  $existing = [
-
-    'ojt_id' => $ojt_id
-
-  ];
-
+    $query = "
+      SELECT ojt_id
+      FROM ojt_form_details
+      WHERE email='$email'
+      LIMIT 1
+    ";
+    $result = mysqli_query($conn, $query);
+    if (mysqli_num_rows($result)==1) {
+      $existing = 1;
+      $rows = mysqli_fetch_assoc($result);
+      $ojt_id = $rows['ojt_id'];
+    }else{
+      $existing = 0;
+    }
+    
     /* ============================
        CREATE BLANK RECORD
     ============================ */
 
     if (!$existing) {
-      $stmt = $conn->prepare("
+      $query = "
       INSERT INTO ojt_form_details (email)
-      VALUES (?)
-      ");
-
-      $stmt->bind_param(
-        "s",
-        $email
-      );
-      $stmt->execute();
-      $ojt_id = $conn->insert_id;
-    }
-    else {
-      $ojt_id = $existing['ojt_id'];
+      VALUES ($email)
+      ";
+      $insert = mysqli_query($conn, $query);
+      $ojt_id = mysql_insert_id($conn);
     }
 
     /* ============================
@@ -122,7 +101,7 @@
         WHERE email='$email'
 
       ";
-      $stmt->close();
+
       // $stmt= mysqli_query($conn, $query);
       if (mysqli_query($conn, $query)) {
         # code...
@@ -133,9 +112,11 @@
           exit();
         }else{
           echo "Not Saved";
+          exit();
         }
       }else{
         echo mysqli_error($conn);
+        exit();
       }
 
 
@@ -223,8 +204,6 @@
         echo mysqli_error($conn);
         exit();
       }
-
-
     }
 
   }
@@ -243,186 +222,161 @@
 
   $form = array();
 
-  /* ============================
-     SEARCH EXISTING RECORD
-  ============================ */
+ 
+  $stmt = $conn->prepare("
 
-  // var_dump($_SESSION);
-  // exit();
+    SELECT
+      ojt_id,
+      user_id,
+      lastname,
+      firstname,
+      middlename,
+      municipality,
+      province,
+      dob,
+      birthplace,
+      height,
+      weight,
+      religion,
+      marital_status,
+      gender,
+      citizenship,
+      contactno,
+      email,
+      dialect,
+      course,
+      major,
+      datestart,
+      ojthours,
+      father,
+      fatheroccupation,
+      fatheraddress,
+      mother,
+      motheroccupation,
+      motheraddress,
+      guardian,
+      guardianaddress,
+      agency,
+      representative,
+      rep_position,
+      agencycontact,
+      agencyaddress1,
+      agencyaddress2,
+      agencyaddress3,
+      agencyaddress4,
+      agencyaddress5,
+      created_at,
+      updated_at
 
-  // $stmt = $conn->prepare("
-  //   SELECT *
-  //   FROM ojt_form_details
-  //   WHERE email=?
+    FROM ojt_form_details
 
-  //   LIMIT 1
-  // ");
+    WHERE email=?
 
-  // $stmt->bind_param(
-  //   "s",
-  //   $_SESSION['email']
-  // );
+    LIMIT 1
 
-  // $stmt->execute();
-  // $result = $stmt->get_result();
+  ");
 
-  // $form = $result->fetch_assoc();
-  // print_r($form);
+  $stmt->bind_param(
+    "s",
+    $_SESSION['email']
+  );
 
-$stmt = $conn->prepare("
+  $stmt->execute();
 
-  SELECT
-    ojt_id,
-    user_id,
-    lastname,
-    firstname,
-    middlename,
-    municipality,
-    province,
-    dob,
-    birthplace,
-    height,
-    weight,
-    religion,
-    marital_status,
-    gender,
-    citizenship,
-    contactno,
-    email,
-    dialect,
-    course,
-    major,
-    datestart,
-    ojthours,
-    father,
-    fatheroccupation,
-    fatheraddress,
-    mother,
-    motheroccupation,
-    motheraddress,
-    guardian,
-    guardianaddress,
-    agency,
-    representative,
-    rep_position,
-    agencycontact,
-    agencyaddress1,
-    agencyaddress2,
-    agencyaddress3,
-    agencyaddress4,
-    agencyaddress5,
-    created_at,
-    updated_at
+  $stmt->bind_result(
 
-  FROM ojt_form_details
+    $ojt_id,
+    $user_id,
+    $lastname,
+    $firstname,
+    $middlename,
+    $municipality,
+    $province,
+    $dob,
+    $birthplace,
+    $height,
+    $weight,
+    $religion,
+    $marital_status,
+    $gender,
+    $citizenship,
+    $contactno,
+    $email,
+    $dialect,
+    $course,
+    $major,
+    $datestart,
+    $ojthours,
+    $father,
+    $fatheroccupation,
+    $fatheraddress,
+    $mother,
+    $motheroccupation,
+    $motheraddress,
+    $guardian,
+    $guardianaddress,
+    $agency,
+    $agencyrepresentative,
+    $rep_position,
+    $agencycontact,
+    $agencyaddress1,
+    $agencyaddress2,
+    $agencyaddress3,
+    $agencyaddress4,
+    $agencyaddress5,
+    $created_at,
+    $updated_at
 
-  WHERE email=?
+  );
 
-  LIMIT 1
+  $stmt->fetch();
 
-");
+  $form = [
 
-$stmt->bind_param(
-  "s",
-  $_SESSION['email']
-);
+    'ojt_id' => $ojt_id,
+    'user_id' => $user_id,
+    'lastname' => $lastname,
+    'firstname' => $firstname,
+    'middlename' => $middlename,
+    'municipality' => $municipality,
+    'province' => $province,
+    'dob' => $dob,
+    'birthplace' => $birthplace,
+    'height' => $height,
+    'weight' => $weight,
+    'religion' => $religion,
+    'marital_status' => $marital_status,
+    'gender' => $gender,
+    'citizenship' => $citizenship,
+    'contactno' => $contactno,
+    'email' => $email,
+    'dialect' => $dialect,
+    'course' => $course,
+    'major' => $major,
+    'datestart' => $datestart,
+    'ojthours' => $ojthours,
+    'father' => $father,
+    'fatheroccupation' => $fatheroccupation,
+    'fatheraddress' => $fatheraddress,
+    'mother' => $mother,
+    'motheroccupation' => $motheroccupation,
+    'motheraddress' => $motheraddress,
+    'guardian' => $guardian,
+    'guardianaddress' => $guardianaddress,
+    'agency' => $agency,
+    'representative' => $agencyrepresentative,
+    'rep_position' => $rep_position,
+    'agencycontact' => $agencycontact,
+    'agencyaddress1' => $agencyaddress1,
+    'agencyaddress2' => $agencyaddress2,
+    'agencyaddress3' => $agencyaddress3,
+    'agencyaddress4' => $agencyaddress4,
+    'agencyaddress5' => $agencyaddress5,
+    'created_at' => $created_at,
+    'updated_at' => $updated_at
 
-$stmt->execute();
-
-$stmt->bind_result(
-
-  $ojt_id,
-  $user_id,
-  $lastname,
-  $firstname,
-  $middlename,
-  $municipality,
-  $province,
-  $dob,
-  $birthplace,
-  $height,
-  $weight,
-  $religion,
-  $marital_status,
-  $gender,
-  $citizenship,
-  $contactno,
-  $email,
-  $dialect,
-  $course,
-  $major,
-  $datestart,
-  $ojthours,
-  $father,
-  $fatheroccupation,
-  $fatheraddress,
-  $mother,
-  $motheroccupation,
-  $motheraddress,
-  $guardian,
-  $guardianaddress,
-  $agency,
-  $agencyrepresentative,
-  $rep_position,
-  $agencycontact,
-  $agencyaddress1,
-  $agencyaddress2,
-  $agencyaddress3,
-  $agencyaddress4,
-  $agencyaddress5,
-  $created_at,
-  $updated_at
-
-);
-
-$stmt->fetch();
-
-$form = [
-
-  'ojt_id' => $ojt_id,
-  'user_id' => $user_id,
-  'lastname' => $lastname,
-  'firstname' => $firstname,
-  'middlename' => $middlename,
-  'municipality' => $municipality,
-  'province' => $province,
-  'dob' => $dob,
-  'birthplace' => $birthplace,
-  'height' => $height,
-  'weight' => $weight,
-  'religion' => $religion,
-  'marital_status' => $marital_status,
-  'gender' => $gender,
-  'citizenship' => $citizenship,
-  'contactno' => $contactno,
-  'email' => $email,
-  'dialect' => $dialect,
-  'course' => $course,
-  'major' => $major,
-  'datestart' => $datestart,
-  'ojthours' => $ojthours,
-  'father' => $father,
-  'fatheroccupation' => $fatheroccupation,
-  'fatheraddress' => $fatheraddress,
-  'mother' => $mother,
-  'motheroccupation' => $motheroccupation,
-  'motheraddress' => $motheraddress,
-  'guardian' => $guardian,
-  'guardianaddress' => $guardianaddress,
-  'agency' => $agency,
-  'representative' => $agencyrepresentative,
-  'rep_position' => $rep_position,
-  'agencycontact' => $agencycontact,
-  'agencyaddress1' => $agencyaddress1,
-  'agencyaddress2' => $agencyaddress2,
-  'agencyaddress3' => $agencyaddress3,
-  'agencyaddress4' => $agencyaddress4,
-  'agencyaddress5' => $agencyaddress5,
-  'created_at' => $created_at,
-  'updated_at' => $updated_at
-
-];
-$stmt->close();
+  ];
+  $stmt->close();
 
 
   
