@@ -277,8 +277,8 @@
      SEARCH EXISTING RECORD
   ============================ */
 
-  var_dump($_SESSION);
-  exit();
+  // var_dump($_SESSION);
+  // exit();
 
   $stmt = $conn->prepare("
     SELECT *
