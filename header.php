@@ -4,13 +4,13 @@
 //   session_start();
 // }
 // require 'auth';
-require 'db/dbconnect.php';
+// require 'db/dbconnect.php';
 
-if (!isset($_SESSION['email'])) {
-  header('location: userlogin.php');
-  die("Session not found");
+// if (!isset($_SESSION['email'])) {
+//   header('location: userlogin.php');
+//   die("Session not found");
 
-}
+// }
 
 ?>
 
