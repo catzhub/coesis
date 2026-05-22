@@ -39,10 +39,10 @@
     if (!$existing) {
       $query = "
       INSERT INTO ojt_form_details (email)
-      VALUES ($email)
+      VALUES ('$email')
       ";
       $insert = mysqli_query($conn, $query);
-      $ojt_id = mysql_insert_id($conn);
+      $ojt_id = mysqli_insert_id($conn);
     }
 
     /* ============================
