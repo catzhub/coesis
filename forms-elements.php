@@ -66,155 +66,105 @@
       $ojt_id = $existing['ojt_id'];
     }
 
-/* ============================
-   STUDENT FORM
-============================ */
+    /* ============================
+       STUDENT FORM
+    ============================ */
 
-if ($request == 'student') {
+    if ($request == 'student') {
 
-  $lastname = $_POST['lastname'];
-  $firstname = $_POST['firstname'];
-  $middlename = $_POST['middlename'];
-  $municipality = $_POST['municipality'];
-  $province = $_POST['province'];
-  $dob = $_POST['dob'];
-  $birthplace = $_POST['birthplace'];
-  $height = $_POST['height'];
-  $weight = $_POST['weight'];
-  $religion = $_POST['religion'];
-  $marital_status = $_POST['marital_status'];
-  $gender = $_POST['gender'];
-  $citizenship = $_POST['citizenship'];
-  $contactno = $_POST['contactno'];
-  $dialect = $_POST['dialect'];
-  $course = $_POST['course'];
-  $major = $_POST['major'];
+      $lastname = mysqli_real_escape_string($conn, $_POST['lastname']);
+      $firstname = mysqli_real_escape_string($conn, $_POST['firstname']);
+      $middlename = mysqli_real_escape_string($conn, $_POST['middlename']);
+      $municipality = mysqli_real_escape_string($conn, $_POST['municipality']);
+      $province = mysqli_real_escape_string($conn, $_POST['province']);
+      $dob = mysqli_real_escape_string($conn, $_POST['dob']);
+      $birthplace = mysqli_real_escape_string($conn, $_POST['birthplace']);
+      $height = mysqli_real_escape_string($conn, $_POST['height']);
+      $weight = mysqli_real_escape_string($conn, $_POST['weight']);
+      $religion = mysqli_real_escape_string($conn, $_POST['religion']);
+      $marital_status = mysqli_real_escape_string($conn, $_POST['marital_status']);
+      $gender = mysqli_real_escape_string($conn, $_POST['gender']);
+      $citizenship = mysqli_real_escape_string($conn, $_POST['citizenship']);
+      $contactno = mysqli_real_escape_string($conn, $_POST['contactno']);
+      $dialect = mysqli_real_escape_string($conn, $_POST['dialect']);
+      $course = mysqli_real_escape_string($conn, $_POST['course']);
+      $major = mysqli_real_escape_string($conn, $_POST['major']);
+      $datestart = mysqli_real_escape_string($conn, $_POST['datestart']);
+      $ojthours = mysqli_real_escape_string($conn, $_POST['ojthours']);
+      $email = mysqli_real_escape_string($conn, $email);
 
-  $datestart =
-  !empty($_POST['datestart'])
-  ? $_POST['datestart']
-  : null;
+      $query = "
 
-  $ojthours = $_POST['ojthours'];
+        UPDATE ojt_form_details
 
-  $stmt = $conn->prepare("
+        SET
 
-    UPDATE ojt_form_details
+          lastname='$lastname',
+          firstname='$firstname',
+          middlename='$middlename',
+          municipality='$municipality',
+          province='$province',
+          dob='$dob',
+          birthplace='$birthplace',
+          height='$height',
+          weight='$weight',
+          religion='$religion',
+          marital_status='$marital_status',
+          gender='$gender',
+          citizenship='$citizenship',
+          contactno='$contactno',
+          dialect='$dialect',
+          course='$course',
+          major='$major',
+          datestart='$datestart',
+          ojthours='$ojthours'
 
-    SET
+        WHERE email='$email'
 
-      lastname=?,
-      firstname=?,
-      middlename=?,
-      municipality=?,
-      province=?,
-      dob=?,
-      birthplace=?,
-      height=?,
-      weight=?,
-      religion=?,
-      marital_status=?,
-      gender=?,
-      citizenship=?,
-      contactno=?,
-      dialect=?,
-      course=?,
-      major=?,
-      datestart=?,
-      ojthours=?
+      ";
+      $stmt->close();
+      $stmt= mysqli_query($conn, $query);
 
-    WHERE email=?
+      header('location: forms-elements.php');
 
-  ");
+      exit();
 
-  $stmt->bind_param(
-
-    "sssssssddsssssssssss",
-
-    $lastname,
-    $firstname,
-    $middlename,
-    $municipality,
-    $province,
-    $dob,
-    $birthplace,
-    $height,
-    $weight,
-    $religion,
-    $marital_status,
-    $gender,
-    $citizenship,
-    $contactno,
-    $dialect,
-    $course,
-    $major,
-    $datestart,
-    $ojthours,
-    $email
-
-  );
-
-  $stmt->execute();
-
-  header('location: forms-elements.php');
-
-  exit();
-
-}
+    }
 
     /* ============================
        PARENT FORM
     ============================ */
 
     if ($request == 'parent') {
-      $father = $_POST['father'];
-      $fatheroccupation = $_POST['fatheroccupation'];
-      $fatheraddress = $_POST['fatheraddress'];
 
-      $mother = $_POST['mother'];
-      $motheroccupation = $_POST['motheroccupation'];
-      $motheraddress = $_POST['motheraddress'];
+      $father = mysqli_real_escape_string($conn, $_POST['father']);
+      $fatheroccupation = mysqli_real_escape_string($conn, $_POST['fatheroccupation']);
+      $fatheraddress = mysqli_real_escape_string($conn, $_POST['fatheraddress']);
 
-      $guardian = $_POST['guardian'];
-      $guardianaddress = $_POST['guardianaddress'];
+      $mother = mysqli_real_escape_string($conn, $_POST['mother']);
+      $motheroccupation = mysqli_real_escape_string($conn, $_POST['motheroccupation']);
+      $motheraddress = mysqli_real_escape_string($conn, $_POST['motheraddress']);
 
-      $stmt = $conn->prepare("
-      UPDATE ojt_form_details
-      SET
-        father=?,
-        fatheroccupation=?,
-        fatheraddress=?,
+      $guardian = mysqli_real_escape_string($conn, $_POST['guardian']);
+      $guardianaddress = mysqli_real_escape_string($conn, $_POST['guardianaddress']);
 
-        mother=?,
-        motheroccupation=?,
-        motheraddress=?,
 
-        guardian=?,
-        guardianaddress=?
+      $query = "
+        UPDATE ojt_form_details
+        SET
+          father='$father',
+          fatheroccupation='$fatheroccupation',
+          fatheraddress='$fatheraddress',
+          mother='$mother',
+          motheroccupation='$motheroccupation',
+          motheraddress='$motheraddress',
+          guardian='$guardian',
+          guardianaddress='$guardianaddress'
+        WHERE email='$email'
+      ";
+      $stmt->close();
+      mysqli_query($conn, $query);
 
-      WHERE email=?
-
-      ");
-
-      $stmt->bind_param(
-        "sssssssss",
-
-        $father,
-        $fatheroccupation,
-        $fatheraddress,
-
-        $mother,
-        $motheroccupation,
-        $motheraddress,
-
-        $guardian,
-        $guardianaddress,
-
-        $email
-
-      );
-
-      $stmt->execute();
       header('location: forms-elements.php');
       exit();
 
@@ -226,58 +176,44 @@ if ($request == 'student') {
 
     if ($request == 'agency') {
 
-      $agency = $_POST['agency'];
-      $representative = $_POST['representative'];
-      $position = $_POST['position'];
-      $agencycontact = isset($_POST['agencycontact']) ? $_POST['agencycontact'] : '';
+      $agency = mysqli_real_escape_string($conn, $_POST['agency']);
+      $representative = mysqli_real_escape_string($conn, $_POST['representative']);
+      $position = mysqli_real_escape_string($conn, $_POST['position']);
+      $agencycontact = mysqli_real_escape_string($conn, isset($_POST['agencycontact']) ? $_POST['agencycontact'] : '');
 
-      $agencyaddress1 = $_POST['agencyaddress1'];
-      $agencyaddress2 = $_POST['agencyaddress2'];
-      $agencyaddress3 = $_POST['agencyaddress3'];
-      $agencyaddress4 = $_POST['agencyaddress4'];
-      $agencyaddress5 = $_POST['agencyaddress5'];
+      $agencyaddress1 = mysqli_real_escape_string($conn, $_POST['agencyaddress1']);
+      $agencyaddress2 = mysqli_real_escape_string($conn, $_POST['agencyaddress2']);
+      $agencyaddress3 = mysqli_real_escape_string($conn, $_POST['agencyaddress3']);
+      $agencyaddress4 = mysqli_real_escape_string($conn, $_POST['agencyaddress4']);
+      $agencyaddress5 = mysqli_real_escape_string($conn, $_POST['agencyaddress5']);
 
-      $stmt = $conn->prepare("
+      
 
-      UPDATE ojt_form_details
+      $query = "
+        UPDATE ojt_form_details
+        SET
+          agency='$agency',
+          representative='$representative',
+          rep_position='$position',
+          agencycontact='$agencycontact',
+          agencyaddress1='$agencyaddress1',
+          agencyaddress2='$agencyaddress2',
+          agencyaddress3='$agencyaddress3',
+          agencyaddress4='$agencyaddress4',
+          agencyaddress5='$agencyaddress5'
+        WHERE email='$email'
+      ";
+      $stmt->close();
+      if (mysqli_query($conn, $query)) {
+        # code...
+        // echo mysqli_affected_rows($conn);
+        header('location: forms-elements.php');
+        exit();
+      }else{
+        echo mysqli_error($conn);
+        exit();
+      }
 
-      SET
-
-        agency=?,
-        representative=?,
-        rep_position=?,
-        agencycontact=?,
-
-        agencyaddress1=?,
-        agencyaddress2=?,
-        agencyaddress3=?,
-        agencyaddress4=?,
-        agencyaddress5=?
-
-      WHERE email=?
-
-      ");
-
-      $stmt->bind_param(
-        "ssssssssss",
-
-        $agency,
-        $representative,
-        $position,
-        $agencycontact,
-        
-        $agencyaddress1,
-        $agencyaddress2,
-        $agencyaddress3,
-        $agencyaddress4,
-        $agencyaddress5,
-
-        $email
-      );
-
-      $stmt->execute();
-      header('location: forms-elements.php');
-      exit();
 
     }
 
@@ -356,8 +292,10 @@ $stmt = $conn->prepare("
     motheraddress,
     guardian,
     guardianaddress,
+    agency,
     representative,
     rep_position,
+    agencycontact,
     agencyaddress1,
     agencyaddress2,
     agencyaddress3,
@@ -413,8 +351,10 @@ $stmt->bind_result(
   $motheraddress,
   $guardian,
   $guardianaddress,
+  $agency,
   $agencyrepresentative,
   $rep_position,
+  $agencycontact,
   $agencyaddress1,
   $agencyaddress2,
   $agencyaddress3,
@@ -459,8 +399,10 @@ $form = [
   'motheraddress' => $motheraddress,
   'guardian' => $guardian,
   'guardianaddress' => $guardianaddress,
+  'agency' => $agency,
   'representative' => $agencyrepresentative,
   'rep_position' => $rep_position,
+  'agencycontact' => $agencycontact,
   'agencyaddress1' => $agencyaddress1,
   'agencyaddress2' => $agencyaddress2,
   'agencyaddress3' => $agencyaddress3,
@@ -470,6 +412,7 @@ $form = [
   'updated_at' => $updated_at
 
 ];
+$stmt->close();
 
 
   
