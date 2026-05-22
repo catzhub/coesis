@@ -253,9 +253,6 @@
 
   }
 
-  
-  var_dump($_SESSION);
-  exit();
 
 
   /* ============================
@@ -293,6 +290,10 @@
 
   $form = mysqli_fetch_assoc($result);
   // print_r($form);
+  
+  
+  var_dump($_SESSION);
+  exit();
 
 ?>
 <?php require('header.php'); ?>
