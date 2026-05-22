@@ -1,69 +1,23 @@
-
-
 <?php
 
-session_start();
-require 'db/dbconnect.php';
+  session_start();
+  require 'include/auth.php';
+  require 'db/dbconnect.php';
 
-$success = '';
+  $success = '';
+  if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $request = isset($_POST['request']) ? $_POST['request'] : '';
+    $email = isset($_SESSION['email']) ? $_SESSION['email'] : '';
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
-  $request =
-  isset($_POST['request'])
-  ? $_POST['request']
-  : '';
-
-  $email =
-  isset($_SESSION['email'])
-  ? $_SESSION['email']
-  : '';
-
-  /* ============================
-     CHECK EXISTING RECORD
-  ============================ */
-
-  $stmt = $conn->prepare("
-
-  SELECT ojt_id
-
-  FROM ojt_form_details
-
-  WHERE email=?
-
-  LIMIT 1
-
-  ");
-
-  $stmt->bind_param(
-    "s",
-    $email
-  );
-
-  $stmt->execute();
-
-  $result =
-  mysqli_stmt_get_result($stmt);
-
-  $existing =
-  mysqli_fetch_assoc($result);
-
-  /* ============================
-     CREATE BLANK RECORD
-  ============================ */
-
-  if (!$existing) {
+    /* ============================
+       CHECK EXISTING RECORD
+    ============================ */
 
     $stmt = $conn->prepare("
-
-    INSERT INTO ojt_form_details (
-      email
-    )
-
-    VALUES (
-      ?
-    )
-
+    SELECT ojt_id
+    FROM ojt_form_details
+    WHERE email=?
+    LIMIT 1
     ");
 
     $stmt->bind_param(
@@ -72,266 +26,259 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     );
 
     $stmt->execute();
+    $result = mysqli_stmt_get_result($stmt);
+    $existing = mysqli_fetch_assoc($result);
 
-    $ojt_id =
-    $conn->insert_id;
+    /* ============================
+       CREATE BLANK RECORD
+    ============================ */
+
+    if (!$existing) {
+      $stmt = $conn->prepare("
+      INSERT INTO ojt_form_details (email)
+      VALUES (?)
+      ");
+
+      $stmt->bind_param(
+        "s",
+        $email
+      );
+      $stmt->execute();
+      $ojt_id = $conn->insert_id;
+    }
+    else {
+      $ojt_id = $existing['ojt_id'];
+    }
+
+    /* ============================
+       STUDENT FORM
+    ============================ */
+
+    if ($request == 'student') {
+
+      $lastname = $_POST['lastname'];
+      $firstname = $_POST['firstname'];
+      $middlename = $_POST['middlename'];
+      $municipality = $_POST['municipality'];
+      $province = $_POST['province'];
+      $dob = $_POST['dob'];
+      $birthplace = $_POST['birthplace'];
+      $height = $_POST['height'];
+      $weight = $_POST['weight'];
+      $religion = $_POST['religion'];
+      $marital_status = $_POST['marital_status'];
+      $gender = $_POST['gender'];
+      $citizenship = $_POST['citizenship'];
+      $contactno = $_POST['contactno'];
+      $dialect = $_POST['dialect'];
+      $course = $_POST['course'];
+      $major = $_POST['major'];
+      $datestart = !empty($_POST['datestart'])? $_POST['datestart']: null;
+      $ojthours = $_POST['ojthours'];
+
+      $stmt = $conn->prepare("
+        UPDATE ojt_form_details
+        SET
+          lastname=?,
+          firstname=?,
+          middlename=?,
+          municipality=?,
+          province=?,
+          dob=?,
+          birthplace=?,
+          height=?,
+          weight=?,
+          religion=?,
+          marital_status=?,
+          gender=?,
+          citizenship=?,
+          contactno=?,
+          dialect=?,
+          course=?,
+          major=?,
+          datestart=?,
+          ojthours=?
+        WHERE email=?
+      ");
+
+      $stmt->bind_param(
+        "sssssssddsssssssssis",
+        $lastname,
+        $firstname,
+        $middlename,
+        $municipality,
+        $province,
+        $dob,
+        $birthplace,
+        $height,
+        $weight,
+        $religion,
+        $marital_status,
+        $gender,
+        $citizenship,
+        $contactno,
+        $dialect,
+        $course,
+        $major,
+        $datestart,
+        $ojthours,
+        $email
+      );
+
+      // if ($stmt->execute()) {
+        # code...
+      $stmt->execute();
+      header('location: forms-elements.php');
+      exit();
+      
+
+    }
+
+    /* ============================
+       PARENT FORM
+    ============================ */
+
+    if ($request == 'parent') {
+      $father = $_POST['father'];
+      $fatheroccupation = $_POST['fatheroccupation'];
+      $fatheraddress = $_POST['fatheraddress'];
+
+      $mother = $_POST['mother'];
+      $motheroccupation = $_POST['motheroccupation'];
+      $motheraddress = $_POST['motheraddress'];
+
+      $guardian = $_POST['guardian'];
+      $guardianaddress = $_POST['guardianaddress'];
+
+      $stmt = $conn->prepare("
+      UPDATE ojt_form_details
+      SET
+        father=?,
+        fatheroccupation=?,
+        fatheraddress=?,
+
+        mother=?,
+        motheroccupation=?,
+        motheraddress=?,
+
+        guardian=?,
+        guardianaddress=?
+
+      WHERE email=?
+
+      ");
+
+      $stmt->bind_param(
+        "sssssssss",
+
+        $father,
+        $fatheroccupation,
+        $fatheraddress,
+
+        $mother,
+        $motheroccupation,
+        $motheraddress,
+
+        $guardian,
+        $guardianaddress,
+
+        $email
+
+      );
+
+      $stmt->execute();
+      header('location: forms-elements.php');
+      exit();
+
+    }
+
+    /* ============================
+       AGENCY FORM
+    ============================ */
+
+    if ($request == 'agency') {
+
+      $agency = $_POST['agency'];
+      $representative = $_POST['representative'];
+      $position = $_POST['position'];
+      $agencycontact = isset($_POST['agencycontact']) ? $_POST['agencycontact'] : '';
+
+      $agencyaddress1 = $_POST['agencyaddress1'];
+      $agencyaddress2 = $_POST['agencyaddress2'];
+      $agencyaddress3 = $_POST['agencyaddress3'];
+      $agencyaddress4 = $_POST['agencyaddress4'];
+      $agencyaddress5 = $_POST['agencyaddress5'];
+
+      $stmt = $conn->prepare("
+
+      UPDATE ojt_form_details
+
+      SET
+
+        agency=?,
+        representative=?,
+        rep_position=?,
+        agencycontact=?,
+
+        agencyaddress1=?,
+        agencyaddress2=?,
+        agencyaddress3=?,
+        agencyaddress4=?,
+        agencyaddress5=?
+
+      WHERE email=?
+
+      ");
+
+      $stmt->bind_param(
+        "ssssssssss",
+
+        $agency,
+        $representative,
+        $position,
+        $agencycontact,
+        
+        $agencyaddress1,
+        $agencyaddress2,
+        $agencyaddress3,
+        $agencyaddress4,
+        $agencyaddress5,
+
+        $email
+      );
+
+      $stmt->execute();
+      header('location: forms-elements.php');
+      exit();
+
+    }
 
   }
-  else {
 
-    $ojt_id =
-    $existing['ojt_id'];
-
-  }
 
   /* ============================
-     STUDENT FORM
+     GET OJT ID
   ============================ */
 
-  if ($request == 'student') {
-
-    $lastname = $_POST['lastname'];
-    $firstname = $_POST['firstname'];
-    $middlename = $_POST['middlename'];
-    $municipality = $_POST['municipality'];
-    $province = $_POST['province'];
-    $dob = $_POST['dob'];
-    $birthplace = $_POST['birthplace'];
-    $height = $_POST['height'];
-    $weight = $_POST['weight'];
-    $religion = $_POST['religion'];
-    $marital_status = $_POST['marital_status'];
-    $gender = $_POST['gender'];
-    $citizenship = $_POST['citizenship'];
-    $contactno = $_POST['contactno'];
-    $dialect = $_POST['dialect'];
-    $course = $_POST['course'];
-    $major = $_POST['major'];
-    $datestart = !empty($_POST['datestart'])? $_POST['datestart']: null;
-    $ojthours = $_POST['ojthours'];
-
-    $stmt = $conn->prepare("
-
-    UPDATE ojt_form_details
-
-    SET
-
-      lastname=?,
-      firstname=?,
-      middlename=?,
-      municipality=?,
-      province=?,
-      dob=?,
-      birthplace=?,
-      height=?,
-      weight=?,
-      religion=?,
-      marital_status=?,
-      gender=?,
-      citizenship=?,
-      contactno=?,
-      dialect=?,
-      course=?,
-      major=?,
-      datestart=?,
-      ojthours=?
-
-    WHERE email=?
-
-    ");
-
-$stmt->bind_param(
-
-"sssssssddsssssssssis",
-
-$lastname,
-$firstname,
-$middlename,
-$municipality,
-$province,
-$dob,
-$birthplace,
-$height,
-$weight,
-$religion,
-$marital_status,
-$gender,
-$citizenship,
-$contactno,
-$dialect,
-$course,
-$major,
-$datestart,
-$ojthours,
-$email
-
-);
-
-    // if ($stmt->execute()) {
-      # code...
-$stmt->execute();
-    header('location: forms-elements.php');
-    exit();
-    
-
-  }
+  $ojt_id = isset($_GET['ojt_id']) ? $_GET['ojt_id'] : 0;
 
   /* ============================
-     PARENT FORM
+     DEFAULT FORM ARRAY
   ============================ */
 
-  if ($request == 'parent') {
-
-    $father = $_POST['father'];
-    $fatheroccupation = $_POST['fatheroccupation'];
-    $fatheraddress = $_POST['fatheraddress'];
-
-    $mother = $_POST['mother'];
-    $motheroccupation = $_POST['motheroccupation'];
-    $motheraddress = $_POST['motheraddress'];
-
-    $guardian = $_POST['guardian'];
-    $guardianaddress = $_POST['guardianaddress'];
-
-    $stmt = $conn->prepare("
-
-    UPDATE ojt_form_details
-
-    SET
-
-      father=?,
-      fatheroccupation=?,
-      fatheraddress=?,
-
-      mother=?,
-      motheroccupation=?,
-      motheraddress=?,
-
-      guardian=?,
-      guardianaddress=?
-
-    WHERE email=?
-
-    ");
-
-    $stmt->bind_param(
-
-    "sssssssss",
-
-    $father,
-    $fatheroccupation,
-    $fatheraddress,
-
-    $mother,
-    $motheroccupation,
-    $motheraddress,
-
-    $guardian,
-    $guardianaddress,
-
-    $email
-
-    );
-
-    $stmt->execute();
-    header('location: forms-elements.php');
-    exit();
-
-  }
+  $form = array();
 
   /* ============================
-     AGENCY FORM
+     SEARCH EXISTING RECORD
   ============================ */
-
-  if ($request == 'agency') {
-
-    $agency = $_POST['agency'];
-    $representative = $_POST['representative'];
-    $position = $_POST['position'];
-    $agencycontact = isset($_POST['agencycontact']) ? $_POST['agencycontact'] : '';
-
-    $agencyaddress1 = $_POST['agencyaddress1'];
-    $agencyaddress2 = $_POST['agencyaddress2'];
-    $agencyaddress3 = $_POST['agencyaddress3'];
-    $agencyaddress4 = $_POST['agencyaddress4'];
-    $agencyaddress5 = $_POST['agencyaddress5'];
-
-    $stmt = $conn->prepare("
-
-    UPDATE ojt_form_details
-
-    SET
-
-      agency=?,
-      representative=?,
-      rep_position=?,
-      agencycontact=?,
-
-      agencyaddress1=?,
-      agencyaddress2=?,
-      agencyaddress3=?,
-      agencyaddress4=?,
-      agencyaddress5=?
-
-    WHERE email=?
-
-    ");
-
-    $stmt->bind_param(
-
-    "ssssssssss",
-
-    $agency,
-    $representative,
-    $position,
-    $agencycontact,
-    
-    $agencyaddress1,
-    $agencyaddress2,
-    $agencyaddress3,
-    $agencyaddress4,
-    $agencyaddress5,
-
-    $email
-
-    );
-
-    $stmt->execute();
-    header('location: forms-elements.php');
-    exit();
-
-  }
-
-}
-
-
-/* ============================
-   GET OJT ID
-============================ */
-
-$ojt_id =
-isset($_GET['ojt_id'])
-? $_GET['ojt_id']
-: 0;
-
-/* ============================
-   DEFAULT FORM ARRAY
-============================ */
-
-$form = array();
-
-/* ============================
-   SEARCH EXISTING RECORD
-============================ */
 
 
   $stmt = $conn->prepare("
-  SELECT *
-  FROM ojt_form_details
-  WHERE email=?
+    SELECT *
+    FROM ojt_form_details
+    WHERE email=?
 
-  LIMIT 1
-
+    LIMIT 1
   ");
 
   $stmt->bind_param(
@@ -340,11 +287,9 @@ $form = array();
   );
 
   $stmt->execute();
-  $result =
-  mysqli_stmt_get_result($stmt);
+  $result = mysqli_stmt_get_result($stmt);
 
-  $form =
-  mysqli_fetch_assoc($result);
+  $form = mysqli_fetch_assoc($result);
   // print_r($form);
 
 ?>

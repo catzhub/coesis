@@ -1,16 +1,14 @@
 <?php
 
-if (session_status() === PHP_SESSION_NONE) {
-
-  session_start();
-
-}
-
+// if (session_status() === PHP_SESSION_NONE) {
+//   session_start();
+// }
+// require 'auth';
 require 'db/dbconnect.php';
 
 if (!isset($_SESSION['email'])) {
-
-   die("Session not found");
+  header('location: userlogin.php');
+  die("Session not found");
 
 }
 
