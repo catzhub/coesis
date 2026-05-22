@@ -153,7 +153,6 @@
           guardianaddress='$guardianaddress'
         WHERE email='$email'
       ";
-      $stmt->close();
       mysqli_query($conn, $query);
 
       header('location: forms-elements.php');
@@ -376,7 +375,6 @@
     'updated_at' => $updated_at
 
   ];
-  $stmt->close();
 
 
   
