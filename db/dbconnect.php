@@ -7,7 +7,7 @@ $isLocalhost = in_array($_SERVER['SERVER_NAME'], ['localhost', '127.0.0.1']);
 if ($isLocalhost) {
   $servername = "localhost";
   $username   = "root";
-  $password   = "vertrigo";
+  $password   = "";
   $database   = "tnrmssks25_sksucampman";
 }
 else {

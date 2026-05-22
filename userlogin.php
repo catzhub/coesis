@@ -8,12 +8,9 @@
 
 <title>Login</title>
 
-<meta name="google-signin-client_id"
-content="216794808536-2or0j3bikibqm8a1nsf7k3d0b578ampi.apps.googleusercontent.com">
-
+<meta name="google-signin-client_id" content="216794808536-2or0j3bikibqm8a1nsf7k3d0b578ampi.apps.googleusercontent.com">
 <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 <link href="assets/css/style.css" rel="stylesheet">
-
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
@@ -25,15 +22,13 @@ content="216794808536-2or0j3bikibqm8a1nsf7k3d0b578ampi.apps.googleusercontent.co
 
 <div class="container">
 
-<section
-class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+<section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
 
 <div class="container">
 
 <div class="row justify-content-center">
 
-<div
-class="col-lg-8 col-md-8 d-flex flex-column align-items-center justify-content-center">
+<div class="col-lg-8 col-md-8 d-flex flex-column align-items-center justify-content-center">
 
 <!-- Logo -->
 
@@ -91,37 +86,26 @@ class="col-lg-8 col-md-8 d-flex flex-column align-items-center justify-content-c
 
 
 
-function handleCredentialResponse(response) {
-
-  $.post(
-
-    "verify.php",
-
-    {
-      credential: response.credential
-    },
-
-    function(res) {
-
-      console.log(res);
-
-      if (res.status == "success") {
-
-        location.href = res.redirect;
-
-      } else {
-
-        alert(res.message);
+      function handleCredentialResponse(response) {
+        $.ajax({
+          url: "verify.php",
+          type: "POST",
+          dataType: "json",
+          data: {
+            credential: response.credential
+          },
+          success: function(res) {
+            console.log(res);
+            if (res.status == "success") {
+              window.location.href = res.redirect;
+            }
+          },
+          error: function(xhr) {
+            console.log(xhr.responseText);
+          }
+        });
 
       }
-
-    },
-
-    "json"
-
-  );
-
-}
 
           </script>
         </div>

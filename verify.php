@@ -1,64 +1,47 @@
 <?php
 
-session_start();
+require_once 'vendor/autoload.php';
 
+session_start();
 header('Content-Type: application/json');
 
-require 'db/dbconnect.php';
+$id_token = isset($_POST['credential']) ? $_POST['credential'] : '';
 
-$credential =
-isset($_POST['credential'])
-? $_POST['credential']
-: '';
-
-if ($credential == '') {
-
+if ($id_token == '') {
   echo json_encode([
     "status" => "error",
-    "message" => "Missing credential"
+    "message" => "Missing token"
   ]);
-
   exit;
-
 }
 
-$verify_url =
-"https://oauth2.googleapis.com/tokeninfo?id_token=".$credential;
+$CLIENT_ID = "216794808536-2or0j3bikibqm8a1nsf7k3d0b578ampi.apps.googleusercontent.com";
 
-$response =
-file_get_contents($verify_url);
+$client = new Google_Client(['client_id' => $CLIENT_ID]);
 
-$payload =
-json_decode($response, true);
-
+$payload = $client->verifyIdToken($id_token);
 
 if (!$payload) {
-
   echo json_encode([
     "status" => "error",
     "message" => "Invalid token"
   ]);
-
   exit;
-
-}else{
-  die("asdasd");
 }
 
-$email            = $payload['email'];
-$google_id        = $payload['sub'];
-$full_name        = $payload['name'];
-$first_name       = isset($payload['given_name']) ? $payload['given_name'] : '';
-$last_name        = isset($payload['family_name']) ? $payload['family_name'] : '';
-$picture          = $payload['picture'];
-$email_verified   = $payload['email_verified'] ? 1 : 0;
+$_SESSION['google_id'] = $payload['sub'];
 
+$_SESSION['email'] = $payload['email'];
 
-$_SESSION['email'] = $email;
-$_SESSION['full_name'] = $full_name;
-$_SESSION['first_name'] = $first_name;
-$_SESSION['last_name'] = $last_name;
-$_SESSION['picture'] = $picture;
+$_SESSION['full_name'] = $payload['name'];
+
+$_SESSION['first_name'] = $payload['given_name'];
+
+$_SESSION['last_name'] = $payload['family_name'];
+
+$_SESSION['picture'] = $payload['picture'];
+
+session_write_close();
 
 echo json_encode([
 
@@ -68,5 +51,3 @@ echo json_encode([
 ]);
 
 exit;
-
-?>
