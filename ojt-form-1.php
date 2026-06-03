@@ -83,7 +83,7 @@ if (
 
     body {
 
-      font-family: "Times New Roman", serif;
+      font-family: Arial, Helvetica, sans-serif;
       font-size: 16px;
       line-height: 1.3;
       color: #000;
