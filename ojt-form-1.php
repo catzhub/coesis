@@ -28,7 +28,7 @@ require 'include/get_form_details.php';
     body {
 
       font-family: Arial, Helvetica, sans-serif;
-      font-size: 18px;
+      font-size: 12pt;
       line-height: 1.3;
       color: #000;
 
