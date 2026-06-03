@@ -1,64 +1,8 @@
 <?php
 
-session_start();
+require 'include/auth.php';
 require 'db/dbconnect.php';
-
-$email = isset($_SESSION['email']) ? $_SESSION['email'] : '';
-
-$stmt = $conn->prepare(" SELECT *
-  FROM ojt_form_details
-  WHERE email=?
-  LIMIT 1
-  ");
-
-$stmt->bind_param(
-  "s",
-  $email
-);
-
-$stmt->execute();
-
-$result = mysqli_stmt_get_result($stmt);
-
-$form = mysqli_fetch_assoc($result);
-
-
-
-$program_chairman = '';
-$program_position = '';
-
-if (
-  isset($form['course'])
-) {
-
-  if (
-    $form['course'] == 'Bachelor of Science in Civil Engineering'
-  ) {
-
-    $program_chairman = 'KIM TYRONE P. CARDENAS, MSCE';
-    $program_position = 'Program Chairman, BSCE';
-
-  }
-
-  else if (
-    $form['course'] == 'Bachelor of Science in Computer Engineering'
-  ) {
-
-    $program_chairman = 'CHARITY L. ORIA, DEng';
-    $program_position = 'Program Chairman, BSCpE';
-
-  }
-
-  else if (
-    $form['course'] == 'Bachelor of Science in Electronics Engineering'
-  ) {
-
-    $program_chairman = 'IVAN ROY S. EVANGELISTA, ME-ECE';
-    $program_position = 'Program Chairman, BSECE';
-
-  }
-
-}
+require 'include/get_form_details.php';
 
 ?>
 <!DOCTYPE html>

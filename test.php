@@ -1,5 +1,16 @@
 <?php
 
-require 'vendor/autoload.php';
+require 'include/auth.php';
+require 'db/dbconnect.php';
 
-echo "Composer is working!";
+$email = isset($_SESSION['email']) ? $_SESSION['email'] : '';
+$stmt = $pdo->prepare("
+	SELECT * FROM ojt_form_details
+	WHERE email = ?"
+	);
+if ($stmt->execute([$email])) {
+	# code...
+var_dump($stmt);
+}else{
+	var_dump($_SESSION);
+}

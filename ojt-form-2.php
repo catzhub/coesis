@@ -1,38 +1,8 @@
 <?php
 
-session_start();
+require 'include/auth.php';
 require 'db/dbconnect.php';
-
-$email =
-isset($_SESSION['email'])
-? $_SESSION['email']
-: '';
-
-$stmt = $conn->prepare("
-
-SELECT *
-
-FROM ojt_form_details
-
-WHERE email=?
-
-LIMIT 1
-
-");
-
-$stmt->bind_param(
-  "s",
-  $email
-);
-
-$stmt->execute();
-
-$result =
-mysqli_stmt_get_result($stmt);
-
-$form =
-mysqli_fetch_assoc($result);
-
+require 'include/get_form_details.php';
 ?>
 <!DOCTYPE html>
 <html>

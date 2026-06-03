@@ -1,18 +1,16 @@
 <?php
 
-if (session_status() === PHP_SESSION_NONE) {
+// if (session_status() === PHP_SESSION_NONE) {
+//   session_start();
+// }
+// require 'auth';
+// require 'db/dbconnect.php';
 
-  session_start();
+// if (!isset($_SESSION['email'])) {
+//   header('location: userlogin.php');
+//   die("Session not found");
 
-}
-
-require 'db/dbconnect.php';
-
-if (!isset($_SESSION['email'])) {
-
-   die("Session not found");
-
-}
+// }
 
 ?>
 
@@ -269,51 +267,6 @@ if (!isset($_SESSION['email'])) {
 
     <ul class="sidebar-nav" id="sidebar-nav">
 
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="dashboard.php">
-          <i class="bi bi-grid"></i>
-          <span>Dashboard</span>
-        </a>
-      </li><!-- End Dashboard Nav -->
-
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="users.php">
-          <i class="bi bi-person"></i>
-          <span>Users</span>
-        </a>
-      </li><!-- End Profile Page Nav -->
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="member.php">
-          <i class="bi bi-person"></i>
-          <span>Members</span>
-        </a>
-      </li><!-- End Members Page Nav -->
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="elections.php">
-          <i class="bi bi-person"></i>
-          <span>Elections</span>
-        </a>
-      </li><!-- End Elections Page Nav -->
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="positions.php">
-          <i class="bi bi-person"></i>
-          <span>IMPC Positions</span>
-        </a>
-      </li><!-- End Positions Page Nav -->
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="candidates.php">
-          <i class="bi bi-person"></i>
-          <span>Candidates</span>
-        </a>
-      </li><!-- End Candidates Page Nav -->
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="votes.php">
-          <i class="bi bi-person"></i>
-          <span>Election Votes</span>
-        </a>
-      </li><!-- End Election Votes Page Nav -->
-
       <li class="nav-item" style="display:none">
         <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-menu-button-wide"></i><span>Components</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -396,7 +349,7 @@ if (!isset($_SESSION['email'])) {
         <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-journal-text"></i><span>Forms</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
-        <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        <ul id="forms-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
           <li>
             <a href="forms-elements.php">
               <i class="bi bi-circle"></i><span>OJT Form Elements</span>
@@ -455,16 +408,6 @@ if (!isset($_SESSION['email'])) {
           <li>
             <a href="ojt-form-11.php" target="_blank">
               <i class="bi bi-circle"></i><span>Form 11</span>
-            </a>
-          </li>
-          <li>
-            <a href="forms-editors.html">
-              <i class="bi bi-circle"></i><span>Form Editors</span>
-            </a>
-          </li>
-          <li>
-            <a href="forms-validation.html">
-              <i class="bi bi-circle"></i><span>Form Validation</span>
             </a>
           </li>
         </ul>

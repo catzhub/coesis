@@ -1,351 +1,385 @@
-
-
 <?php
+  ini_set('display_errors', 1);
+  ini_set('display_startup_errors', 1);
 
-session_start();
-require 'db/dbconnect.php';
+  error_reporting(E_ALL);
 
-$success = '';
+  mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+  require 'include/auth.php';
+  require 'db/dbconnect.php';
+  $email = isset($_SESSION['email']) ? mysqli_real_escape_string($conn,$_SESSION['email']) : '';
+  $success = '';
+  if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $request = isset($_POST['request']) ? $_POST['request'] : '';
 
-  $request =
-  isset($_POST['request'])
-  ? $_POST['request']
-  : '';
+    /* ============================
+       CHECK EXISTING RECORD
+    ============================ */
 
-  $email =
-  isset($_SESSION['email'])
-  ? $_SESSION['email']
-  : '';
-
-  /* ============================
-     CHECK EXISTING RECORD
-  ============================ */
-
-  $stmt = $conn->prepare("
-
-  SELECT ojt_id
-
-  FROM ojt_form_details
-
-  WHERE email=?
-
-  LIMIT 1
-
-  ");
-
-  $stmt->bind_param(
-    "s",
-    $email
-  );
-
-  $stmt->execute();
-
-  $result =
-  mysqli_stmt_get_result($stmt);
-
-  $existing =
-  mysqli_fetch_assoc($result);
-
-  /* ============================
-     CREATE BLANK RECORD
-  ============================ */
-
-  if (!$existing) {
-
-    $stmt = $conn->prepare("
-
-    INSERT INTO ojt_form_details (
-      email
-    )
-
-    VALUES (
-      ?
-    )
-
-    ");
-
-    $stmt->bind_param(
-      "s",
-      $email
-    );
-
-    $stmt->execute();
-
-    $ojt_id =
-    $conn->insert_id;
-
-  }
-  else {
-
-    $ojt_id =
-    $existing['ojt_id'];
-
-  }
-
-  /* ============================
-     STUDENT FORM
-  ============================ */
-
-  if ($request == 'student') {
-
-    $lastname = $_POST['lastname'];
-    $firstname = $_POST['firstname'];
-    $middlename = $_POST['middlename'];
-    $municipality = $_POST['municipality'];
-    $province = $_POST['province'];
-    $dob = $_POST['dob'];
-    $birthplace = $_POST['birthplace'];
-    $height = $_POST['height'];
-    $weight = $_POST['weight'];
-    $religion = $_POST['religion'];
-    $marital_status = $_POST['marital_status'];
-    $gender = $_POST['gender'];
-    $citizenship = $_POST['citizenship'];
-    $contactno = $_POST['contactno'];
-    $dialect = $_POST['dialect'];
-    $course = $_POST['course'];
-    $major = $_POST['major'];
-    $datestart = !empty($_POST['datestart'])? $_POST['datestart']: null;
-    $ojthours = $_POST['ojthours'];
-
-    $stmt = $conn->prepare("
-
-    UPDATE ojt_form_details
-
-    SET
-
-      lastname=?,
-      firstname=?,
-      middlename=?,
-      municipality=?,
-      province=?,
-      dob=?,
-      birthplace=?,
-      height=?,
-      weight=?,
-      religion=?,
-      marital_status=?,
-      gender=?,
-      citizenship=?,
-      contactno=?,
-      dialect=?,
-      course=?,
-      major=?,
-      datestart=?,
-      ojthours=?
-
-    WHERE email=?
-
-    ");
-
-$stmt->bind_param(
-
-"sssssssddsssssssssis",
-
-$lastname,
-$firstname,
-$middlename,
-$municipality,
-$province,
-$dob,
-$birthplace,
-$height,
-$weight,
-$religion,
-$marital_status,
-$gender,
-$citizenship,
-$contactno,
-$dialect,
-$course,
-$major,
-$datestart,
-$ojthours,
-$email
-
-);
-
-    // if ($stmt->execute()) {
-      # code...
-$stmt->execute();
-    header('location: forms-elements.php');
-    exit();
+    $query = "
+      SELECT ojt_id
+      FROM ojt_form_details
+      WHERE email='$email'
+    ";
+    $result = mysqli_query($conn, $query);
+    if (mysqli_num_rows($result)>0) {
+      $existing = true;
+      $rows = mysqli_fetch_assoc($result);
+      $ojt_id = $rows['ojt_id'];
+    }else{
+      $existing = false;
+    }
     
+    /* ============================
+       CREATE BLANK RECORD
+    ============================ */
+
+    if (!$existing) {
+      $query = "
+      INSERT INTO ojt_form_details (email)
+      VALUES ('$email')
+      ";
+      $insert = mysqli_query($conn, $query);
+      $ojt_id = mysqli_insert_id($conn);
+    }
+
+    /* ============================
+       STUDENT FORM
+    ============================ */
+
+    if ($request == 'student') {
+
+      $lastname = mysqli_real_escape_string($conn, $_POST['lastname']);
+      $firstname = mysqli_real_escape_string($conn, $_POST['firstname']);
+      $middlename = mysqli_real_escape_string($conn, $_POST['middlename']);
+      $municipality = mysqli_real_escape_string($conn, $_POST['municipality']);
+      $province = mysqli_real_escape_string($conn, $_POST['province']);
+      $dob = mysqli_real_escape_string($conn, $_POST['dob']);
+      $birthplace = mysqli_real_escape_string($conn, $_POST['birthplace']);
+      $height = mysqli_real_escape_string($conn, $_POST['height']);
+      $weight = mysqli_real_escape_string($conn, $_POST['weight']);
+      $religion = mysqli_real_escape_string($conn, $_POST['religion']);
+      $marital_status = mysqli_real_escape_string($conn, $_POST['marital_status']);
+      $gender = mysqli_real_escape_string($conn, $_POST['gender']);
+      $citizenship = mysqli_real_escape_string($conn, $_POST['citizenship']);
+      $contactno = mysqli_real_escape_string($conn, $_POST['contactno']);
+      $dialect = mysqli_real_escape_string($conn, $_POST['dialect']);
+      $course = mysqli_real_escape_string($conn, $_POST['course']);
+      $major = mysqli_real_escape_string($conn, $_POST['major']);
+      $datestart = mysqli_real_escape_string($conn, $_POST['datestart']);
+      $ojthours = mysqli_real_escape_string($conn, $_POST['ojthours']);
+
+      $query = "
+
+        UPDATE ojt_form_details
+        SET
+
+          lastname='$lastname',
+          firstname='$firstname',
+          middlename='$middlename',
+          municipality='$municipality',
+          province='$province',
+          dob='$dob',
+          birthplace='$birthplace',
+          height='$height',
+          weight='$weight',
+          religion='$religion',
+          marital_status='$marital_status',
+          gender='$gender',
+          citizenship='$citizenship',
+          contactno='$contactno',
+          dialect='$dialect',
+          course='$course',
+          major='$major',
+          datestart='$datestart',
+          ojthours='$ojthours'
+
+        WHERE email='$email'
+
+      ";
+      $update = mysqli_query($conn, $query);
+      if ($update) {
+          header("Location: forms-elements.php?success=1");
+          exit();
+      }else{
+        echo 'Opps.. Please contact administrator';
+        exit();
+      }
+
+
+    }
+
+    /* ============================
+       PARENT FORM
+    ============================ */
+
+    if ($request == 'parent') {
+
+      $father = mysqli_real_escape_string($conn, $_POST['father']);
+      $fatheroccupation = mysqli_real_escape_string($conn, $_POST['fatheroccupation']);
+      $fatheraddress = mysqli_real_escape_string($conn, $_POST['fatheraddress']);
+
+      $mother = mysqli_real_escape_string($conn, $_POST['mother']);
+      $motheroccupation = mysqli_real_escape_string($conn, $_POST['motheroccupation']);
+      $motheraddress = mysqli_real_escape_string($conn, $_POST['motheraddress']);
+
+      $guardian = mysqli_real_escape_string($conn, $_POST['guardian']);
+      $guardianaddress = mysqli_real_escape_string($conn, $_POST['guardianaddress']);
+
+
+      $query = "
+        UPDATE ojt_form_details
+        SET
+          father='$father',
+          fatheroccupation='$fatheroccupation',
+          fatheraddress='$fatheraddress',
+          mother='$mother',
+          motheroccupation='$motheroccupation',
+          motheraddress='$motheraddress',
+          guardian='$guardian',
+          guardianaddress='$guardianaddress'
+        WHERE email='$email'
+      ";
+
+      if (mysqli_query($conn, $query)) {
+        header("Location: forms-elements.php?success=1");
+        exit();
+      }else{
+        echo 'Opps.. Please contact administrator';
+        exit();
+      }
+
+    }
+
+    /* ============================
+       AGENCY FORM
+    ============================ */
+
+    if ($request == 'agency') {
+
+      $agency = mysqli_real_escape_string($conn, $_POST['agency']);
+      $representative = mysqli_real_escape_string($conn, $_POST['representative']);
+      $position = mysqli_real_escape_string($conn, $_POST['position']);
+      $agencycontact = mysqli_real_escape_string($conn, isset($_POST['agencycontact']) ? $_POST['agencycontact'] : '');
+
+      $agencyaddress1 = mysqli_real_escape_string($conn, $_POST['agencyaddress1']);
+      $agencyaddress2 = mysqli_real_escape_string($conn, $_POST['agencyaddress2']);
+      $agencyaddress3 = mysqli_real_escape_string($conn, $_POST['agencyaddress3']);
+      $agencyaddress4 = mysqli_real_escape_string($conn, $_POST['agencyaddress4']);
+      $agencyaddress5 = mysqli_real_escape_string($conn, $_POST['agencyaddress5']);
+
+      
+
+      $query = "
+        UPDATE ojt_form_details
+        SET
+          agency='$agency',
+          representative='$representative',
+          rep_position='$position',
+          agencycontact='$agencycontact',
+          agencyaddress1='$agencyaddress1',
+          agencyaddress2='$agencyaddress2',
+          agencyaddress3='$agencyaddress3',
+          agencyaddress4='$agencyaddress4',
+          agencyaddress5='$agencyaddress5'
+        WHERE email='$email'
+      ";
+
+      if (mysqli_query($conn, $query)) {
+        header("Location: forms-elements.php?success=1");
+        exit();
+      }else{
+        echo 'Opps.. Please contact administrator';
+        exit();
+      }
+    }
 
   }
+
+
 
   /* ============================
-     PARENT FORM
+     GET OJT ID
   ============================ */
 
-  if ($request == 'parent') {
-
-    $father = $_POST['father'];
-    $fatheroccupation = $_POST['fatheroccupation'];
-    $fatheraddress = $_POST['fatheraddress'];
-
-    $mother = $_POST['mother'];
-    $motheroccupation = $_POST['motheroccupation'];
-    $motheraddress = $_POST['motheraddress'];
-
-    $guardian = $_POST['guardian'];
-    $guardianaddress = $_POST['guardianaddress'];
-
-    $stmt = $conn->prepare("
-
-    UPDATE ojt_form_details
-
-    SET
-
-      father=?,
-      fatheroccupation=?,
-      fatheraddress=?,
-
-      mother=?,
-      motheroccupation=?,
-      motheraddress=?,
-
-      guardian=?,
-      guardianaddress=?
-
-    WHERE email=?
-
-    ");
-
-    $stmt->bind_param(
-
-    "sssssssss",
-
-    $father,
-    $fatheroccupation,
-    $fatheraddress,
-
-    $mother,
-    $motheroccupation,
-    $motheraddress,
-
-    $guardian,
-    $guardianaddress,
-
-    $email
-
-    );
-
-    $stmt->execute();
-    header('location: forms-elements.php');
-    exit();
-
-  }
+  // $ojt_id = isset($_GET['ojt_id']) ? $_GET['ojt_id'] : 0;
 
   /* ============================
-     AGENCY FORM
+     DEFAULT FORM ARRAY
   ============================ */
-
-  if ($request == 'agency') {
-
-    $agency = $_POST['agency'];
-    $representative = $_POST['representative'];
-    $position = $_POST['position'];
-    $agencycontact = isset($_POST['agencycontact']) ? $_POST['agencycontact'] : '';
-
-    $agencyaddress1 = $_POST['agencyaddress1'];
-    $agencyaddress2 = $_POST['agencyaddress2'];
-    $agencyaddress3 = $_POST['agencyaddress3'];
-    $agencyaddress4 = $_POST['agencyaddress4'];
-    $agencyaddress5 = $_POST['agencyaddress5'];
-
-    $stmt = $conn->prepare("
-
-    UPDATE ojt_form_details
-
-    SET
-
-      agency=?,
-      representative=?,
-      rep_position=?,
-      agencycontact=?,
-
-      agencyaddress1=?,
-      agencyaddress2=?,
-      agencyaddress3=?,
-      agencyaddress4=?,
-      agencyaddress5=?
-
-    WHERE email=?
-
-    ");
-
-    $stmt->bind_param(
-
-    "ssssssssss",
-
-    $agency,
-    $representative,
-    $position,
-    $agencycontact,
-    
-    $agencyaddress1,
-    $agencyaddress2,
-    $agencyaddress3,
-    $agencyaddress4,
-    $agencyaddress5,
-
-    $email
-
-    );
-
-    $stmt->execute();
-    header('location: forms-elements.php');
+  $query = "
+    SELECT * FROM ojt_form_details WHERE email = '$email';
+    ";
+  $select = mysqli_query($conn, $query);
+  if ($select) {
+    $form = mysqli_fetch_assoc($select);
+    // var_dump($form);
+    // exit();
+  }else{
+    echo 'Opps.. Please contact administrator';
     exit();
-
   }
 
-}
+  // $form = array();
+
+ 
+  // $stmt = $conn->prepare("
+
+  //   SELECT
+  //     ojt_id,
+  //     user_id,
+  //     lastname,
+  //     firstname,
+  //     middlename,
+  //     municipality,
+  //     province,
+  //     dob,
+  //     birthplace,
+  //     height,
+  //     weight,
+  //     religion,
+  //     marital_status,
+  //     gender,
+  //     citizenship,
+  //     contactno,
+  //     email,
+  //     dialect,
+  //     course,
+  //     major,
+  //     datestart,
+  //     ojthours,
+  //     father,
+  //     fatheroccupation,
+  //     fatheraddress,
+  //     mother,
+  //     motheroccupation,
+  //     motheraddress,
+  //     guardian,
+  //     guardianaddress,
+  //     agency,
+  //     representative,
+  //     rep_position,
+  //     agencycontact,
+  //     agencyaddress1,
+  //     agencyaddress2,
+  //     agencyaddress3,
+  //     agencyaddress4,
+  //     agencyaddress5,
+  //     created_at,
+  //     updated_at
+
+  //   FROM ojt_form_details
+
+  //   WHERE email=?
+
+  //   LIMIT 1
+
+  // ");
+
+  // $stmt->bind_param(
+  //   "s",
+  //   $_SESSION['email']
+  // );
+
+  // $stmt->execute();
+
+  // $stmt->bind_result(
+
+  //   $ojt_id,
+  //   $user_id,
+  //   $lastname,
+  //   $firstname,
+  //   $middlename,
+  //   $municipality,
+  //   $province,
+  //   $dob,
+  //   $birthplace,
+  //   $height,
+  //   $weight,
+  //   $religion,
+  //   $marital_status,
+  //   $gender,
+  //   $citizenship,
+  //   $contactno,
+  //   $email,
+  //   $dialect,
+  //   $course,
+  //   $major,
+  //   $datestart,
+  //   $ojthours,
+  //   $father,
+  //   $fatheroccupation,
+  //   $fatheraddress,
+  //   $mother,
+  //   $motheroccupation,
+  //   $motheraddress,
+  //   $guardian,
+  //   $guardianaddress,
+  //   $agency,
+  //   $agencyrepresentative,
+  //   $rep_position,
+  //   $agencycontact,
+  //   $agencyaddress1,
+  //   $agencyaddress2,
+  //   $agencyaddress3,
+  //   $agencyaddress4,
+  //   $agencyaddress5,
+  //   $created_at,
+  //   $updated_at
+
+  // );
+
+  // $stmt->fetch();
+
+  // $form = [
+
+  //   'ojt_id' => $ojt_id,
+  //   'user_id' => $user_id,
+  //   'lastname' => $lastname,
+  //   'firstname' => $firstname,
+  //   'middlename' => $middlename,
+  //   'municipality' => $municipality,
+  //   'province' => $province,
+  //   'dob' => $dob,
+  //   'birthplace' => $birthplace,
+  //   'height' => $height,
+  //   'weight' => $weight,
+  //   'religion' => $religion,
+  //   'marital_status' => $marital_status,
+  //   'gender' => $gender,
+  //   'citizenship' => $citizenship,
+  //   'contactno' => $contactno,
+  //   'email' => $email,
+  //   'dialect' => $dialect,
+  //   'course' => $course,
+  //   'major' => $major,
+  //   'datestart' => $datestart,
+  //   'ojthours' => $ojthours,
+  //   'father' => $father,
+  //   'fatheroccupation' => $fatheroccupation,
+  //   'fatheraddress' => $fatheraddress,
+  //   'mother' => $mother,
+  //   'motheroccupation' => $motheroccupation,
+  //   'motheraddress' => $motheraddress,
+  //   'guardian' => $guardian,
+  //   'guardianaddress' => $guardianaddress,
+  //   'agency' => $agency,
+  //   'representative' => $agencyrepresentative,
+  //   'rep_position' => $rep_position,
+  //   'agencycontact' => $agencycontact,
+  //   'agencyaddress1' => $agencyaddress1,
+  //   'agencyaddress2' => $agencyaddress2,
+  //   'agencyaddress3' => $agencyaddress3,
+  //   'agencyaddress4' => $agencyaddress4,
+  //   'agencyaddress5' => $agencyaddress5,
+  //   'created_at' => $created_at,
+  //   'updated_at' => $updated_at
+
+  // ];
 
 
-/* ============================
-   GET OJT ID
-============================ */
-
-$ojt_id =
-isset($_GET['ojt_id'])
-? $_GET['ojt_id']
-: 0;
-
-/* ============================
-   DEFAULT FORM ARRAY
-============================ */
-
-$form = array();
-
-/* ============================
-   SEARCH EXISTING RECORD
-============================ */
-
-
-  $stmt = $conn->prepare("
-  SELECT *
-  FROM ojt_form_details
-  WHERE email=?
-
-  LIMIT 1
-
-  ");
-
-  $stmt->bind_param(
-    "s",
-    $_SESSION['email']
-  );
-
-  $stmt->execute();
-  $result =
-  mysqli_stmt_get_result($stmt);
-
-  $form =
-  mysqli_fetch_assoc($result);
-  // print_r($form);
+  
 
 ?>
 <?php require('header.php'); ?>
@@ -366,7 +400,7 @@ $form = array();
 
     <section class="section">
       <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-12">
 
           <div class="card">
             <div class="card-body">
@@ -785,162 +819,104 @@ $form = array();
                 </div>
                 <div class="row mb-3">
 
-  <div class="col-sm-6">
+                  <div class="col-sm-6">
 
-    <label class="form-label">
-    Course
-    </label>
+                    <label class="form-label">Course</label>
+                    <select class="form-select" name="course">
+                      <option value="">Select</option>
 
-    <select class="form-select"
-    name="course">
+                      <option value="Bachelor of Science in Civil Engineering"
+                        <?php
+                          if (isset($form['course']) && $form['course'] == 'Bachelor of Science in Civil Engineering') {
+                            echo 'selected';
+                          }
+                        ?>
+                      >
+                        Bachelor of Science in Civil Engineering
+                      </option>
+                      <option value="Bachelor of Science in Computer Engineering"
+                        <?php
+                          if (isset($form['course']) && $form['course'] == 'Bachelor of Science in Computer Engineering') {
+                            echo 'selected';
+                          }
+                        ?>
+                      >
+                      Bachelor of Science in Computer Engineering
+                      </option>
+                      <option value="Bachelor of Science in Electronics Engineering"
+                        <?php
+                          if (isset($form['course']) && $form['course'] == 'Bachelor of Science in Electronics Engineering') {
+                            echo 'selected';
+                          }
+                        ?>
+                      >
+                      Bachelor of Science in Electronics Engineering
+                      </option>
+                    </select>
+                  </div>
 
-      <option value="">
-      Select
-      </option>
+                  <div class="col-sm-6">
+                    <label class="form-label">
+                    Major
+                    </label>
 
-      <option value="Bachelor of Science in Civil Engineering"
+                    <input type="text" class="form-control" name="major"
+                      value="<?php
 
-      <?php
+                      echo isset($form['major'])
+                      ? $form['major']
+                      : '';
 
-      if (
-        isset($form['course'])
-        &&
-        $form['course'] == 'Bachelor of Science in Civil Engineering'
-      ) {
+                      ?>">
 
-        echo 'selected';
-
-      }
-
-      ?>
-
-      >
-
-      Bachelor of Science in Civil Engineering
-
-      </option>
-
-      <option value="Bachelor of Science in Computer Engineering"
-
-      <?php
-
-      if (
-        isset($form['course'])
-        &&
-        $form['course'] == 'Bachelor of Science in Computer Engineering'
-      ) {
-
-        echo 'selected';
-
-      }
-
-      ?>
-
-      >
-
-      Bachelor of Science in Computer Engineering
-
-      </option>
-
-      <option value="Bachelor of Science in Electronics Engineering"
-
-      <?php
-
-      if (
-        isset($form['course'])
-        &&
-        $form['course'] == 'Bachelor of Science in Electronics Engineering'
-      ) {
-
-        echo 'selected';
-
-      }
-
-      ?>
-
-      >
-
-      Bachelor of Science in Electronics Engineering
-
-      </option>
-
-    </select>
-
-  </div>
-
-  <div class="col-sm-6">
-
-    <label class="form-label">
-    Major
-    </label>
-
-    <input type="text"
-    class="form-control"
-    name="major"
-
-    value="<?php
-
-    echo isset($form['major'])
-    ? $form['major']
-    : '';
-
-    ?>">
-
-  </div>
-
-</div>
-
-
-<div class="row mb-3">
-
-  <div class="col-sm-3">
-
-    <label class="form-label">
-    Date of Start
-    </label>
-
-    <input type="date"
-    class="form-control"
-    name="datestart"
-
-    value="<?php
-
-    echo isset($form['datestart'])
-    ? $form['datestart']
-    : '';
-
-    ?>">
-
-  </div>
-
-  <div class="col-sm-3">
-
-    <label class="form-label">
-    OJT No. of Hours
-    </label>
-
-    <input type="number"
-    class="form-control"
-    name="ojthours"
-    readonly
-
-    value="<?php
-
-    echo isset($form['ojthours'])
-    ? $form['ojthours']
-    : '240';
-
-    ?>">
-
-  </div>
-
-</div>
+                  </div>
+                </div>
 
 
 
                 <div class="row mb-3">
+                  <div class="col-sm-6">
+                    <label class="form-label">
+                    Date of Start
+                    </label>
+
+                    <input type="date" class="form-control" name="datestart" 
+                      value="<?php
+                      echo isset($form['datestart'])
+                      ? $form['datestart']
+                      : '';
+
+                      ?>">
+
+                  </div>
+
+                  <div class="col-sm-6">
+
+                    <label class="form-label">
+                    OJT No. of Hours
+                    </label>
+
+                    <input type="number"
+                    class="form-control"
+                    name="ojthours"
+                    readonly
+
+                    value="<?php
+
+                    echo isset($form['ojthours'])
+                    ? $form['ojthours']
+                    : '240';
+
+                    ?>">
+
+                  </div>
+
+                </div>
+
+
+                <div class="row mb-3">
                   <!-- <label class="col-sm-2 col-form-label">Submit Button</label> -->
-                  <div class="col-sm-10">
+                  <div class="col-sm-12">
                     <button type="submit" class="btn btn-primary" name="request" value="student">Submit Form</button>
                   </div>
                 </div>
@@ -952,7 +928,7 @@ $form = array();
         </div>
 
 
-        <div class="col-lg-6">
+        <div class="col-lg-12">
 
           <div class="card">
             <div class="card-body">
@@ -1029,7 +1005,7 @@ $form = array();
         </div>
 
 
-        <div class="col-lg-6">
+        <div class="col-lg-12">
 
           <div class="card">
             <div class="card-body">
