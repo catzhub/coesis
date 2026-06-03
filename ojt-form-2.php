@@ -28,8 +28,8 @@ require 'include/get_form_details.php';
 
     body {
 
-      font-family: "Times New Roman", serif;
-      font-size: 16px;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 18px;
       line-height: 1.3;
       color: #000;
 
